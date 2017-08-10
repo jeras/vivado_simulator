@@ -10,7 +10,7 @@ PATH_TBN=../tbn
 # testbench files
 TBN_PKG =$(wildcard $(PATH_TBN)/*_pkg.sv)
 TBN_SRC =$(wildcard $(PATH_TBN)/*.sv)
-TBN_SRC =$(wildcard $(PATH_TBN)/*.v)
+TBN_SRC+=$(wildcard $(PATH_TBN)/*.v)
 TBN_DIF =$(filter-out $(TBN_PKG),$(TBN_SRC))
 SRC = $(TBN_PKG) $(TBN_DIF)
 SRC+= $(PATH_LIB)/glbl.v
@@ -54,7 +54,7 @@ elaborate: compile
 	--snapshot axi4stream_vip_0_exdes_tb_behav xil_defaultlib.axi4stream_vip_0_exdes_tb xil_defaultlib.glbl -log elaborate.log
 #	--snapshot $@ xil_defaultlib.$@
 
-simmulate:
+simmulate: elaborate
 #	xsim $@ -gui -wdb simulate_xsim.wdb
 #	xsim axi4stream_vip_0_exdes_tb_behav -tclbatch axi4stream_vip_0_exdes_tb.tcl -log simulate.log
 	xsim axi4stream_vip_0_exdes_tb_behav -tclbatch axi4stream_vip_0_exdes_tb.tcl -gui -view axi4stream_vip_0_exdes_tb_behav.wcfg -log simulate.log
