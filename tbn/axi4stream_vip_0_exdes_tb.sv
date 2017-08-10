@@ -94,37 +94,47 @@ module axi4stream_vip_0_exdes_tb();
   ex_sim_axi4stream_vip_slv_0_slv_t                              slv_agent;
   
      
-  // Clock signal
-  bit                                     clock;
-  // Reset signal
-  bit                                     reset;
+  // clock/reset signal
+  bit aclk;
+  bit aresetn;
 
-  // instantiate bd
-  ex_sim DUT(
-    .aresetn(reset),
-    .aclk(clock)
+  logic [7:0] axi4stream_vip_M_AXIS_TDATA;
+  logic [0:0] axi4stream_vip_M_AXIS_TREADY;
+  logic [0:0] axi4stream_vip_M_AXIS_TVALID;
+
+  ex_sim_axi4stream_vip_mst_0 axi4stream_vip_mst (
+    .aclk          (aclk),
+    .aresetn       (aresetn),
+    .m_axis_tdata  (axi4stream_vip_M_AXIS_TDATA),
+    .m_axis_tready (axi4stream_vip_M_AXIS_TREADY),
+    .m_axis_tvalid (axi4stream_vip_M_AXIS_TVALID)
+  );
+
+  ex_sim_axi4stream_vip_slv_0 axi4stream_vip_slv (
+    .aclk          (aclk),
+    .aresetn       (aresetn),
+    .s_axis_tdata  (axi4stream_vip_M_AXIS_TDATA),
+    .s_axis_tready (axi4stream_vip_M_AXIS_TREADY),
+    .s_axis_tvalid (axi4stream_vip_M_AXIS_TVALID)
   );
 
   initial begin
-    reset <= 1'b1;
+    aresetn <= 1'b1;
   end
   
-  always #10 clock <= ~clock;
+  always #10 aclk <= ~aclk;
 
   //Main process
   initial begin
-    /*mst_monitor_transaction = new("master monitor transaction");
-    slv_monitor_transaction = new("slave monitor transaction");*/
-
     /***************************************************************************************************
     * The hierarchy path of the AXI4STREAM VIP's interface is passed to the agent when it is newed. 
     * Method to find the hierarchy path of AXI4STREAM VIP is to run simulation without agents being newed,
     * message like "Xilinx AXI4STREAM VIP Found at Path: 
-    * my_ip_exdes_tb.DUT.axi4stream_vip_mst.inst" will be printed out.
+    * my_ip_exdes_tb.axi4stream_vip_mst.inst" will be printed out.
     ***************************************************************************************************/
 
-    mst_agent = new("master vip agent",DUT.axi4stream_vip_mst.inst.IF);
-    slv_agent = new("slave vip agent",DUT.axi4stream_vip_slv.inst.IF);
+    mst_agent = new("master vip agent",axi4stream_vip_mst.inst.IF);
+    slv_agent = new("slave vip agent",axi4stream_vip_slv.inst.IF);
     $timeformat (-12, 1, " ps", 1);
 
     /***************************************************************************************************

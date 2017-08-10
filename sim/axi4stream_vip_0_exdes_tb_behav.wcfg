@@ -74,23 +74,23 @@
       <obj_property name="ElementShortName">reset</obj_property>
       <obj_property name="ObjectShortName">reset</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/axi4stream_vip_0_exdes_tb/DUT/axi4stream_vip_mst/aclk">
+   <wvobject type="logic" fp_name="/axi4stream_vip_0_exdes_tb/axi4stream_vip_mst/aclk">
       <obj_property name="ElementShortName">aclk</obj_property>
       <obj_property name="ObjectShortName">aclk</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/axi4stream_vip_0_exdes_tb/DUT/axi4stream_vip_mst/aresetn">
+   <wvobject type="logic" fp_name="/axi4stream_vip_0_exdes_tb/axi4stream_vip_mst/aresetn">
       <obj_property name="ElementShortName">aresetn</obj_property>
       <obj_property name="ObjectShortName">aresetn</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/DUT/axi4stream_vip_mst/m_axis_tvalid">
+   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/axi4stream_vip_mst/m_axis_tvalid">
       <obj_property name="ElementShortName">m_axis_tvalid[0:0]</obj_property>
       <obj_property name="ObjectShortName">m_axis_tvalid[0:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/DUT/axi4stream_vip_mst/m_axis_tready">
+   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/axi4stream_vip_mst/m_axis_tready">
       <obj_property name="ElementShortName">m_axis_tready[0:0]</obj_property>
       <obj_property name="ObjectShortName">m_axis_tready[0:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/DUT/axi4stream_vip_mst/m_axis_tdata">
+   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/axi4stream_vip_mst/m_axis_tdata">
       <obj_property name="ElementShortName">m_axis_tdata[7:0]</obj_property>
       <obj_property name="ObjectShortName">m_axis_tdata[7:0]</obj_property>
    </wvobject>
