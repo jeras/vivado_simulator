@@ -84,7 +84,7 @@ module axi4stream_vip_0_exdes_tb();
   xil_axi4stream_uint                           slv_agent_verbosity = 0;
   /***************************************************************************************************
   * Parameterized agents which customer needs to declare according to AXI4STREAM VIP configuration
-  * If AXI4STREAM VIP is being configured in master mode, "component_name"_mst_t has to declared 
+  * If AXI4STREAM VIP is being configured in master mode, "component_name"_mst_t has to be declared 
   * If AXI4STREAM VIP is being configured in slave mode, "component_name"_slv_t has to be declared 
   * "component_name can be easily found in vivado bd design: click on the instance, 
   * then click CONFIG under Properties window and Component_Name will be shown

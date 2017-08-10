@@ -15,7 +15,7 @@ module axi4stream_vip_mst_0 (
 );
 
 axi4stream_vip_v1_0_1_top #(
-  .C_AXI4STREAM_SIGNAL_SET         ('H00000003),
+  .C_AXI4STREAM_SIGNAL_SET         (8'B00000011),
   .C_AXI4STREAM_INTERFACE_MODE     (0),
   .C_AXI4STREAM_DATA_WIDTH         (8),
   .C_AXI4STREAM_USER_BITS_PER_BYTE (0),

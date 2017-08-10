@@ -3,7 +3,7 @@ package axi4stream_vip_mst_0_pkg;
 import axi4stream_vip_v1_0_1_pkg::*;
 
 parameter axi4stream_vip_mst_0_VIP_INTERFACE_MODE     = 0;
-parameter axi4stream_vip_mst_0_VIP_SIGNAL_SET         = 8'b00000011;
+parameter axi4stream_vip_mst_0_VIP_SIGNAL_SET         = 8'B00000011;
 parameter axi4stream_vip_mst_0_VIP_DATA_WIDTH         = 8;
 parameter axi4stream_vip_mst_0_VIP_ID_WIDTH           = 0;
 parameter axi4stream_vip_mst_0_VIP_DEST_WIDTH         = 0;
