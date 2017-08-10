@@ -54,7 +54,7 @@ elaborate: compile
 	--snapshot axi4stream_vip_0_exdes_tb_behav xil_defaultlib.axi4stream_vip_0_exdes_tb xil_defaultlib.glbl -log elaborate.log
 #	--snapshot $@ xil_defaultlib.$@
 
-simmulate: elaborate
+simulate: elaborate
 #	xsim $@ -gui -wdb simulate_xsim.wdb
 #	xsim axi4stream_vip_0_exdes_tb_behav -tclbatch axi4stream_vip_0_exdes_tb.tcl -log simulate.log
 	xsim axi4stream_vip_0_exdes_tb_behav -tclbatch axi4stream_vip_0_exdes_tb.tcl -gui -view axi4stream_vip_0_exdes_tb_behav.wcfg -log simulate.log
