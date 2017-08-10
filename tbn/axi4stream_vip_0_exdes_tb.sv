@@ -161,9 +161,8 @@ module axi4stream_vip_0_exdes_tb(
   bit                                     reset;
 
   // instantiate bd
-  chip DUT(
-      .aresetn(reset),
-  
+  ex_sim DUT(
+    .aresetn(reset),
     .aclk(clock)
   );
 
@@ -182,12 +181,12 @@ module axi4stream_vip_0_exdes_tb(
     * The hierarchy path of the AXI4STREAM VIP's interface is passed to the agent when it is newed. 
     * Method to find the hierarchy path of AXI4STREAM VIP is to run simulation without agents being newed,
     * message like "Xilinx AXI4STREAM VIP Found at Path: 
-    * my_ip_exdes_tb.DUT.ex_design.axi4stream_vip_mst.inst" will be printed out.
+    * my_ip_exdes_tb.DUT.axi4stream_vip_mst.inst" will be printed out.
     ***************************************************************************************************/
 
-    mst_agent = new("master vip agent",DUT.ex_design.axi4stream_vip_mst.inst.IF);
-    slv_agent = new("slave vip agent",DUT.ex_design.axi4stream_vip_slv.inst.IF);
-    passthrough_agent = new("passthrough vip agent",DUT.ex_design.axi4stream_vip_passthrough.inst.IF);
+    mst_agent = new("master vip agent",DUT.axi4stream_vip_mst.inst.IF);
+    slv_agent = new("slave vip agent",DUT.axi4stream_vip_slv.inst.IF);
+    passthrough_agent = new("passthrough vip agent",DUT.axi4stream_vip_passthrough.inst.IF);
     $timeformat (-12, 1, " ps", 1);
 
     /***************************************************************************************************
@@ -255,7 +254,7 @@ module axi4stream_vip_0_exdes_tb(
     * Passthrough VIP behaves as master VIP
     * Create transcation and send out transaction
     ***************************************************************************************************/
-    axi4stream_vip_0_exdes_tb.DUT.ex_design.axi4stream_vip_passthrough.inst.set_master_mode();
+    axi4stream_vip_0_exdes_tb.DUT.axi4stream_vip_passthrough.inst.set_master_mode();
     exdes_state = EXDES_PASSTHROUGH_MASTER;
     passthrough_agent.set_agent_tag("Passthrough VIP in Master mode");
     passthrough_agent.start_master();
@@ -276,7 +275,7 @@ module axi4stream_vip_0_exdes_tb(
       passthrough_cmd_switch_cnt++;
     end
     #1ns;
-    axi4stream_vip_0_exdes_tb.DUT.ex_design.axi4stream_vip_passthrough.inst.set_slave_mode();
+    axi4stream_vip_0_exdes_tb.DUT.axi4stream_vip_passthrough.inst.set_slave_mode();
     exdes_state = EXDES_PASSTHROUGH_SLAVE;
     passthrough_agent.set_agent_tag("Passthrough VIP in Slave mode");
     passthrough_agent.stop_master();
