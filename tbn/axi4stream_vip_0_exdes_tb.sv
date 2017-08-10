@@ -133,8 +133,8 @@ module axi4stream_vip_0_exdes_tb();
     * my_ip_exdes_tb.axi4stream_vip_mst.inst" will be printed out.
     ***************************************************************************************************/
 
-    mst_agent = new("master vip agent",axi4stream_vip_mst.inst.IF);
-    slv_agent = new("slave vip agent",axi4stream_vip_slv.inst.IF);
+    mst_agent = new("master vip agent", axi4stream_vip_mst.inst.IF);
+    slv_agent = new("slave vip agent" , axi4stream_vip_slv.inst.IF);
     $timeformat (-12, 1, " ps", 1);
 
     /***************************************************************************************************
