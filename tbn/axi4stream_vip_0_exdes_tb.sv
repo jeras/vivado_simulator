@@ -50,8 +50,7 @@ import axi4stream_vip_v1_0_1_pkg::*;
 import ex_sim_axi4stream_vip_mst_0_pkg::*;
 import ex_sim_axi4stream_vip_slv_0_pkg::*;
 
-module axi4stream_vip_0_exdes_tb(
-  );
+module axi4stream_vip_0_exdes_tb();
 
   // Error count to check how many comparison failed
   xil_axi4stream_uint                            error_cnt = 0; 
@@ -66,16 +65,12 @@ module axi4stream_vip_0_exdes_tb(
   axi4stream_monitor_transaction                 mst_monitor_transaction;
   // Monitor transaction queue for master VIP 
   axi4stream_monitor_transaction                 master_monitor_transaction_queue[$];
-  // Size of master_monitor_transaction_queue
-  xil_axi4stream_uint                            master_monitor_transaction_queue_size =0;
   // Scoreboard transaction from master monitor transaction queue
   axi4stream_monitor_transaction                 mst_scb_transaction;
   // Monitor transaction for slave VIP
   axi4stream_monitor_transaction                 slv_monitor_transaction;
   // Monitor transaction queue for slave VIP
   axi4stream_monitor_transaction                 slave_monitor_transaction_queue[$];
-  // Size of slave_monitor_transaction_queue
-  xil_axi4stream_uint                            slave_monitor_transaction_queue_size =0;
   // Scoreboard transaction from slave monitor transaction queue
   axi4stream_monitor_transaction                 slv_scb_transaction;
   /***************************************************************************************************
@@ -253,7 +248,6 @@ module axi4stream_vip_0_exdes_tb(
     forever begin
       mst_agent.monitor.item_collected_port.get(mst_monitor_transaction);
       master_monitor_transaction_queue.push_back(mst_monitor_transaction);
-      master_monitor_transaction_queue_size++;
     end  
   end 
 
@@ -265,7 +259,6 @@ module axi4stream_vip_0_exdes_tb(
     forever begin
       slv_agent.monitor.item_collected_port.get(slv_monitor_transaction);
       slave_monitor_transaction_queue.push_back(slv_monitor_transaction);
-      slave_monitor_transaction_queue_size++;
     end
   end
 
@@ -276,12 +269,10 @@ module axi4stream_vip_0_exdes_tb(
   ***************************************************************************************************/
   initial begin
    forever begin
-      wait (master_monitor_transaction_queue_size>0 ) begin
+      wait (master_monitor_transaction_queue.size() > 0) begin
         mst_scb_transaction = master_monitor_transaction_queue.pop_front;
-        master_monitor_transaction_queue_size--;
-        wait( slave_monitor_transaction_queue_size>0) begin
+        wait (slave_monitor_transaction_queue.size() > 0) begin
           slv_scb_transaction = slave_monitor_transaction_queue.pop_front;
-          slave_monitor_transaction_queue_size--;
           if (slv_scb_transaction.do_compare(mst_scb_transaction) == 0) begin
             $display("ERROR:  Master VIP against slave VIP scoreboard Compare failed");
             error_cnt++;
