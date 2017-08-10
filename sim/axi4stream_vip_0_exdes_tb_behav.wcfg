@@ -34,21 +34,9 @@
       <obj_property name="ElementShortName">comparison_cnt[31:0]</obj_property>
       <obj_property name="ObjectShortName">comparison_cnt[31:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/passthrough_cmd_switch_cnt">
-      <obj_property name="ElementShortName">passthrough_cmd_switch_cnt[31:0]</obj_property>
-      <obj_property name="ObjectShortName">passthrough_cmd_switch_cnt[31:0]</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/master_moniter_transaction_queue_size">
       <obj_property name="ElementShortName">master_moniter_transaction_queue_size[31:0]</obj_property>
       <obj_property name="ObjectShortName">master_moniter_transaction_queue_size[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/passthrough_master_moniter_transaction_queue_size">
-      <obj_property name="ElementShortName">passthrough_master_moniter_transaction_queue_size[31:0]</obj_property>
-      <obj_property name="ObjectShortName">passthrough_master_moniter_transaction_queue_size[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/passthrough_slave_moniter_transaction_queue_size">
-      <obj_property name="ElementShortName">passthrough_slave_moniter_transaction_queue_size[31:0]</obj_property>
-      <obj_property name="ObjectShortName">passthrough_slave_moniter_transaction_queue_size[31:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/slave_moniter_transaction_queue_size">
       <obj_property name="ElementShortName">slave_moniter_transaction_queue_size[31:0]</obj_property>
@@ -61,10 +49,6 @@
    <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/slv_agent_verbosity">
       <obj_property name="ElementShortName">slv_agent_verbosity[31:0]</obj_property>
       <obj_property name="ObjectShortName">slv_agent_verbosity[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/passthrough_agent_verbosity">
-      <obj_property name="ElementShortName">passthrough_agent_verbosity[31:0]</obj_property>
-      <obj_property name="ObjectShortName">passthrough_agent_verbosity[31:0]</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/axi4stream_vip_0_exdes_tb/clock">
       <obj_property name="ElementShortName">clock</obj_property>

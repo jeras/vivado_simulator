@@ -1,24 +1,18 @@
 `timescale 1ns/1ps
 
 (* DowngradeIPIdentifiedWarnings = "yes" *)
-module ex_sim_axi4stream_vip_mst_0 (
-  aclk,
-  aresetn,
-  m_axis_tvalid,
-  m_axis_tready,
-  m_axis_tdata
+module axi4stream_vip_mst_0 (
+  (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 CLOCK CLK" *)
+  input  logic         aclk,
+  (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 RESET RST" *)
+  input  logic         aresetn,
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 M_AXIS TVALID" *)
+  output logic [0 : 0] m_axis_tvalid,
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 M_AXIS TREADY" *)
+  input  logic [0 : 0] m_axis_tready,
+  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 M_AXIS TDATA" *)
+  output logic [7 : 0] m_axis_tdata
 );
-
-(* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 CLOCK CLK" *)
-input wire aclk;
-(* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 RESET RST" *)
-input wire aresetn;
-(* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 M_AXIS TVALID" *)
-output wire [0 : 0] m_axis_tvalid;
-(* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 M_AXIS TREADY" *)
-input wire [0 : 0] m_axis_tready;
-(* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 M_AXIS TDATA" *)
-output wire [7 : 0] m_axis_tdata;
 
 axi4stream_vip_v1_0_1_top #(
   .C_AXI4STREAM_SIGNAL_SET         ('H00000003),
@@ -56,4 +50,4 @@ axi4stream_vip_v1_0_1_top #(
   .m_axis_tuser  ()
 );
 
-endmodule
+endmodule: axi4stream_vip_mst_0

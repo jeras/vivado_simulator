@@ -14,7 +14,7 @@
 * follow this order.
 *    1. import two packages.
 *       import axi4stream_vip_v1_0_1_pkg::* 
-*       import ex_sim_axi4stream_vip_mst_0_pkg::*;
+*       import axi4stream_vip_mst_0_pkg::*;
 *    2. delcare "component_name"_mst_t agent
 *    3. new agent (passing instance IF correctly)
 *    4. set vif_proxy dummy drive type 
@@ -30,7 +30,7 @@
 * follow this order.
 *    1. import two packages.
 *       import axi4stream_vip_v1_0_1_pkg::* 
-*       import ex_sim_axi4stream_vip_slv_0_pkg::*;
+*       import axi4stream_vip_slv_0_pkg::*;
 *    2. delcare "component_name"_slv_t agent
 *    3. new agent (passing instance IF correctly)
 *    4. set vif_proxy dummy drive type 
@@ -47,8 +47,8 @@
 * axi4stream_vip_v1_0_1_pkg
 ***************************************************************************************************/
 import axi4stream_vip_v1_0_1_pkg::*;
-import ex_sim_axi4stream_vip_mst_0_pkg::*;
-import ex_sim_axi4stream_vip_slv_0_pkg::*;
+import axi4stream_vip_mst_0_pkg::*;
+import axi4stream_vip_slv_0_pkg::*;
 
 module axi4stream_vip_0_exdes_tb();
 
@@ -90,8 +90,8 @@ module axi4stream_vip_0_exdes_tb();
   * then click CONFIG under Properties window and Component_Name will be shown
   * More details please refer PG277 for more details
   ***************************************************************************************************/
-  ex_sim_axi4stream_vip_mst_0_mst_t                              mst_agent;
-  ex_sim_axi4stream_vip_slv_0_slv_t                              slv_agent;
+  axi4stream_vip_mst_0_mst_t                              mst_agent;
+  axi4stream_vip_slv_0_slv_t                              slv_agent;
   
      
   // clock/reset signal
@@ -102,7 +102,7 @@ module axi4stream_vip_0_exdes_tb();
   logic [0:0] axi4stream_vip_M_AXIS_TREADY;
   logic [0:0] axi4stream_vip_M_AXIS_TVALID;
 
-  ex_sim_axi4stream_vip_mst_0 axi4stream_vip_mst (
+  axi4stream_vip_mst_0 axi4stream_vip_mst (
     .aclk          (aclk),
     .aresetn       (aresetn),
     .m_axis_tdata  (axi4stream_vip_M_AXIS_TDATA),
@@ -110,7 +110,7 @@ module axi4stream_vip_0_exdes_tb();
     .m_axis_tvalid (axi4stream_vip_M_AXIS_TVALID)
   );
 
-  ex_sim_axi4stream_vip_slv_0 axi4stream_vip_slv (
+  axi4stream_vip_slv_0 axi4stream_vip_slv (
     .aclk          (aclk),
     .aresetn       (aresetn),
     .s_axis_tdata  (axi4stream_vip_M_AXIS_TDATA),
