@@ -18,34 +18,22 @@ module ex_sim
 
   wire aclk_1;
   wire aresetn_1;
-  wire [7:0]axi4stream_vip_mst_M_AXIS_TDATA;
-  wire [0:0]axi4stream_vip_mst_M_AXIS_TREADY;
-  wire [0:0]axi4stream_vip_mst_M_AXIS_TVALID;
-  wire [7:0]axi4stream_vip_passthrough_M_AXIS_TDATA;
-  wire [0:0]axi4stream_vip_passthrough_M_AXIS_TREADY;
-  wire [0:0]axi4stream_vip_passthrough_M_AXIS_TVALID;
+  wire [7:0]axi4stream_vip_M_AXIS_TDATA;
+  wire [0:0]axi4stream_vip_M_AXIS_TREADY;
+  wire [0:0]axi4stream_vip_M_AXIS_TVALID;
 
   assign aclk_1 = aclk;
   assign aresetn_1 = aresetn;
   ex_sim_axi4stream_vip_mst_0 axi4stream_vip_mst
        (.aclk(aclk_1),
         .aresetn(aresetn_1),
-        .m_axis_tdata(axi4stream_vip_mst_M_AXIS_TDATA),
-        .m_axis_tready(axi4stream_vip_mst_M_AXIS_TREADY),
-        .m_axis_tvalid(axi4stream_vip_mst_M_AXIS_TVALID));
-  ex_sim_axi4stream_vip_passthrough_0 axi4stream_vip_passthrough
-       (.aclk(aclk_1),
-        .aresetn(aresetn_1),
-        .m_axis_tdata(axi4stream_vip_passthrough_M_AXIS_TDATA),
-        .m_axis_tready(axi4stream_vip_passthrough_M_AXIS_TREADY),
-        .m_axis_tvalid(axi4stream_vip_passthrough_M_AXIS_TVALID),
-        .s_axis_tdata(axi4stream_vip_mst_M_AXIS_TDATA),
-        .s_axis_tready(axi4stream_vip_mst_M_AXIS_TREADY),
-        .s_axis_tvalid(axi4stream_vip_mst_M_AXIS_TVALID));
+        .m_axis_tdata (axi4stream_vip_M_AXIS_TDATA),
+        .m_axis_tready(axi4stream_vip_M_AXIS_TREADY),
+        .m_axis_tvalid(axi4stream_vip_M_AXIS_TVALID));
   ex_sim_axi4stream_vip_slv_0 axi4stream_vip_slv
        (.aclk(aclk_1),
         .aresetn(aresetn_1),
-        .s_axis_tdata(axi4stream_vip_passthrough_M_AXIS_TDATA),
-        .s_axis_tready(axi4stream_vip_passthrough_M_AXIS_TREADY),
-        .s_axis_tvalid(axi4stream_vip_passthrough_M_AXIS_TVALID));
+        .s_axis_tdata (axi4stream_vip_M_AXIS_TDATA),
+        .s_axis_tready(axi4stream_vip_M_AXIS_TREADY),
+        .s_axis_tvalid(axi4stream_vip_M_AXIS_TVALID));
 endmodule
