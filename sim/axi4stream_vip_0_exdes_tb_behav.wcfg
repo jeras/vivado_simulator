@@ -22,10 +22,6 @@
       <ValueColumnWidth column_width="119"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="18" />
-   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/exdes_state">
-      <obj_property name="ElementShortName">exdes_state[31:0]</obj_property>
-      <obj_property name="ObjectShortName">exdes_state[31:0]</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/error_cnt">
       <obj_property name="ElementShortName">error_cnt[31:0]</obj_property>
       <obj_property name="ObjectShortName">error_cnt[31:0]</obj_property>
@@ -50,32 +46,24 @@
       <obj_property name="ElementShortName">slv_agent_verbosity[31:0]</obj_property>
       <obj_property name="ObjectShortName">slv_agent_verbosity[31:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/axi4stream_vip_0_exdes_tb/clock">
-      <obj_property name="ElementShortName">clock</obj_property>
-      <obj_property name="ObjectShortName">clock</obj_property>
+   <wvobject type="logic" fp_name="/axi4stream_vip_0_exdes_tb/str/ACLK">
+      <obj_property name="ElementShortName">ACLK</obj_property>
+      <obj_property name="ObjectShortName">ACLK</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/axi4stream_vip_0_exdes_tb/reset">
-      <obj_property name="ElementShortName">reset</obj_property>
-      <obj_property name="ObjectShortName">reset</obj_property>
+   <wvobject type="logic" fp_name="/axi4stream_vip_0_exdes_tb/str/ARESETn">
+      <obj_property name="ElementShortName">ARESETn</obj_property>
+      <obj_property name="ObjectShortName">ARESETn</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/axi4stream_vip_0_exdes_tb/axi4stream_vip_mst/aclk">
-      <obj_property name="ElementShortName">aclk</obj_property>
-      <obj_property name="ObjectShortName">aclk</obj_property>
+   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/str/TVALID">
+      <obj_property name="ElementShortName">str.TVALID[0:0]</obj_property>
+      <obj_property name="ObjectShortName">str.TVALID[0:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/axi4stream_vip_0_exdes_tb/axi4stream_vip_mst/aresetn">
-      <obj_property name="ElementShortName">aresetn</obj_property>
-      <obj_property name="ObjectShortName">aresetn</obj_property>
+   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/str/TREADY">
+      <obj_property name="ElementShortName">str.TREADY[0:0]</obj_property>
+      <obj_property name="ObjectShortName">str.TREADY[0:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/axi4stream_vip_mst/m_axis_tvalid">
-      <obj_property name="ElementShortName">m_axis_tvalid[0:0]</obj_property>
-      <obj_property name="ObjectShortName">m_axis_tvalid[0:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/axi4stream_vip_mst/m_axis_tready">
-      <obj_property name="ElementShortName">m_axis_tready[0:0]</obj_property>
-      <obj_property name="ObjectShortName">m_axis_tready[0:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/axi4stream_vip_mst/m_axis_tdata">
-      <obj_property name="ElementShortName">m_axis_tdata[7:0]</obj_property>
-      <obj_property name="ObjectShortName">m_axis_tdata[7:0]</obj_property>
+   <wvobject type="array" fp_name="/axi4stream_vip_0_exdes_tb/str/TDATA">
+      <obj_property name="ElementShortName">str.TDATA[7:0]</obj_property>
+      <obj_property name="ObjectShortName">str.TDATA[7:0]</obj_property>
    </wvobject>
 </wave_config>

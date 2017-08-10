@@ -1,17 +1,7 @@
 `timescale 1ns/1ps
 
-(* DowngradeIPIdentifiedWarnings = "yes" *)
 module axi4stream_vip_mst_0 (
-  (* X_INTERFACE_INFO = "xilinx.com:signal:clock:1.0 CLOCK CLK" *)
-  input  logic         aclk,
-  (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 RESET RST" *)
-  input  logic         aresetn,
-  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 M_AXIS TVALID" *)
-  output logic [0 : 0] m_axis_tvalid,
-  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 M_AXIS TREADY" *)
-  input  logic [0 : 0] m_axis_tready,
-  (* X_INTERFACE_INFO = "xilinx.com:interface:axis:1.0 M_AXIS TDATA" *)
-  output logic [7 : 0] m_axis_tdata
+  axi4_stream_if.s m_axis  // AXI4-Stream source
 );
 
 import axi4stream_vip_mst_0_pkg::*;
@@ -27,8 +17,8 @@ axi4stream_vip_v1_0_1_top #(
   .C_AXI4STREAM_HAS_ARESETN        (axi4stream_vip_mst_0_VIP_HAS_ARESETN       )
 ) inst (
   // system
-  .aclk          (aclk),
-  .aresetn       (aresetn),
+  .aclk          (m_axis.ACLK),
+  .aresetn       (m_axis.ARESETn),
   .aclken        (1'B1),
   // slave
   .s_axis_tvalid (1'B0),
@@ -41,9 +31,9 @@ axi4stream_vip_v1_0_1_top #(
   .s_axis_tdest  (1'B0),
   .s_axis_tuser  (1'B0),
   // master
-  .m_axis_tvalid (m_axis_tvalid),
-  .m_axis_tready (m_axis_tready),
-  .m_axis_tdata  (m_axis_tdata),
+  .m_axis_tvalid (m_axis.TVALID),
+  .m_axis_tready (m_axis.TREADY),
+  .m_axis_tdata  (m_axis.TDATA),
   .m_axis_tstrb  (),
   .m_axis_tkeep  (),
   .m_axis_tlast  (),

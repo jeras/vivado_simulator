@@ -98,31 +98,16 @@ module axi4stream_vip_0_exdes_tb();
   bit aclk;
   bit aresetn;
 
-  logic [7:0] axi4stream_vip_M_AXIS_TDATA;
-  logic [0:0] axi4stream_vip_M_AXIS_TREADY;
-  logic [0:0] axi4stream_vip_M_AXIS_TVALID;
-
-  axi4stream_vip_mst_0 axi4stream_vip_mst (
-    .aclk          (aclk),
-    .aresetn       (aresetn),
-    .m_axis_tdata  (axi4stream_vip_M_AXIS_TDATA),
-    .m_axis_tready (axi4stream_vip_M_AXIS_TREADY),
-    .m_axis_tvalid (axi4stream_vip_M_AXIS_TVALID)
-  );
-
-  axi4stream_vip_slv_0 axi4stream_vip_slv (
-    .aclk          (aclk),
-    .aresetn       (aresetn),
-    .s_axis_tdata  (axi4stream_vip_M_AXIS_TDATA),
-    .s_axis_tready (axi4stream_vip_M_AXIS_TREADY),
-    .s_axis_tvalid (axi4stream_vip_M_AXIS_TVALID)
-  );
-
   initial begin
     aresetn <= 1'b1;
   end
   
-  always #10 aclk <= ~aclk;
+  always #10ns aclk <= ~aclk;
+
+  axi4_stream_if #(.DN (1), .DT (logic signed [8-1:0])) str (.ACLK (aclk), .ARESETn (aresetn));
+
+  axi4stream_vip_mst_0 axi4stream_vip_mst (.m_axis (str));
+  axi4stream_vip_slv_0 axi4stream_vip_slv (.s_axis (str));
 
   //Main process
   initial begin

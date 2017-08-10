@@ -7,13 +7,23 @@ PATH_TBN=../tbn
 
 # TODO: VIP for AXI4 memory mapped interfaces, and ZYNQ PS
 
+# RTL files
+RTL_PKG =$(wildcard $(PATH_RTL)/*_pkg.sv)
+RTL_SRC =$(wildcard $(PATH_RTL)/*.sv)
+RTL_SRC+=$(wildcard $(PATH_RTL)/*.v)
+RTL_DIF =$(filter-out $(RTL_PKG),$(RTL_SRC))
+RTL = $(RTL_PKG) $(RTL_DIF)
+
 # testbench files
 TBN_PKG =$(wildcard $(PATH_TBN)/*_pkg.sv)
 TBN_SRC =$(wildcard $(PATH_TBN)/*.sv)
 TBN_SRC+=$(wildcard $(PATH_TBN)/*.v)
 TBN_DIF =$(filter-out $(TBN_PKG),$(TBN_SRC))
-SRC = $(TBN_PKG) $(TBN_DIF)
-SRC+= $(PATH_LIB)/glbl.v
+TBN = $(TBN_PKG) $(TBN_DIF)
+TBN+= $(PATH_LIB)/glbl.v
+
+SRC = $(RTL) $(TBN)
+
 
 .PHONY: compile elborate
 
