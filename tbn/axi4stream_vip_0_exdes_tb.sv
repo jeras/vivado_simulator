@@ -138,7 +138,7 @@ module axi4stream_vip_0_exdes_tb();
     $timeformat (-12, 1, " ps", 1);
 
     /***************************************************************************************************
-    * When bus is in idle, it must drive everything to 0.otherwise it will 
+    * When bus is in idle, it must drive everything to 0, otherwise it will 
     * trigger false assertion failure from axi_protocol_chekcer
     ***************************************************************************************************/
     

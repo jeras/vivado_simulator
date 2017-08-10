@@ -14,15 +14,17 @@ module axi4stream_vip_slv_0 (
   input  logic [7 : 0] s_axis_tdata
 );
 
+import axi4stream_vip_slv_0_pkg::*;
+
 axi4stream_vip_v1_0_1_top #(
-  .C_AXI4STREAM_SIGNAL_SET         (8'B00000011),
-  .C_AXI4STREAM_INTERFACE_MODE     (2),
-  .C_AXI4STREAM_DATA_WIDTH         (8),
-  .C_AXI4STREAM_USER_BITS_PER_BYTE (0),
-  .C_AXI4STREAM_ID_WIDTH           (0),
-  .C_AXI4STREAM_DEST_WIDTH         (0),
-  .C_AXI4STREAM_USER_WIDTH         (0),
-  .C_AXI4STREAM_HAS_ARESETN        (1)
+  .C_AXI4STREAM_SIGNAL_SET         (axi4stream_vip_slv_0_VIP_SIGNAL_SET        ),
+  .C_AXI4STREAM_INTERFACE_MODE     (axi4stream_vip_slv_0_VIP_INTERFACE_MODE    ),
+  .C_AXI4STREAM_DATA_WIDTH         (axi4stream_vip_slv_0_VIP_DATA_WIDTH        ),
+  .C_AXI4STREAM_USER_BITS_PER_BYTE (axi4stream_vip_slv_0_VIP_USER_BITS_PER_BYTE),
+  .C_AXI4STREAM_ID_WIDTH           (axi4stream_vip_slv_0_VIP_ID_WIDTH          ),
+  .C_AXI4STREAM_DEST_WIDTH         (axi4stream_vip_slv_0_VIP_DEST_WIDTH        ),
+  .C_AXI4STREAM_USER_WIDTH         (axi4stream_vip_slv_0_VIP_USER_WIDTH        ),
+  .C_AXI4STREAM_HAS_ARESETN        (axi4stream_vip_slv_0_VIP_HAS_ARESETN       )
 ) inst (
   // system
   .aclk          (aclk),
