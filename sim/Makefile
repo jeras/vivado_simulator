@@ -14,9 +14,6 @@ TBN_DIF =$(filter-out $(TBN_PKG),$(TBN_SRC))
 SRC = $(TBN_PKG) $(TBN_DIF)
 SRC+= #LIB=$(PATH_LIB)/glbl.v
 
-# targets
-TGT=$(RTL:.sv=)
-
 OPT =-L xil_common_vip_v1_0_0
 OPT+=-L axi4stream_vip_v1_0_1
 OPT+=-L xil_defaultlib
@@ -28,11 +25,9 @@ OPT+=--include $(XILINX_VIVADO)/data/ip/xilinx/processing_system7_vip_v1_0/hdl/
 
 .PHONY: compile elborate
 
-all: $(TGT)
-
 compile: $(SRC)
-	$(foreach file,$(TBN),xvlog                     --sv --work xil_defaultlib $(file);)
-#	$(foreach file,$(TBN),xvlog -m64 --relax $(OPT) --sv --work xil_defaultlib $(file);)
+#	$(foreach file,$(SRC),xvlog                     --sv --work xil_defaultlib $(file);)
+	$(foreach file,$(SRC),xvlog -m64 --relax $(OPT) --sv --work xil_defaultlib $(file);)
 
 elaborate: compile
 
