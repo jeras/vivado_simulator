@@ -24,8 +24,11 @@ TBN+= $(PATH_LIB)/glbl.v
 
 SRC = $(RTL) $(TBN)
 
+MOD ?= axi4stream_vip_0_exdes
 
-.PHONY: compile elborate
+ALL = simulate
+
+.PHONY: compile elborate simulate
 
 
 OPT_COMPILE_LIB =-L xil_common_vip_v1_0_0
@@ -61,10 +64,10 @@ OPT_ELABORATE = $(OPT_ELABORATE_LIB)
 elaborate: compile
 #%_tb: elaborate
 	xelab -m64 --debug typical --relax $(OPT_ELABORATE) \
-	--snapshot axi4stream_vip_0_exdes_tb_behav xil_defaultlib.axi4stream_vip_0_exdes_tb xil_defaultlib.glbl -log elaborate.log
+	--snapshot $(MOD)_tb_behav xil_defaultlib.$(MOD)_tb xil_defaultlib.glbl -log elaborate.log
 #	--snapshot $@ xil_defaultlib.$@
 
 simulate: elaborate
 #	xsim $@ -gui -wdb simulate_xsim.wdb
-#	xsim axi4stream_vip_0_exdes_tb_behav -tclbatch axi4stream_vip_0_exdes_tb.tcl -log simulate.log
-	xsim axi4stream_vip_0_exdes_tb_behav -tclbatch axi4stream_vip_0_exdes_tb.tcl -gui -view axi4stream_vip_0_exdes_tb_behav.wcfg -log simulate.log
+#	xsim $(MOD)_tb_behav -tclbatch $(MOD)_tb.tcl -log simulate.log
+	xsim $(MOD)_tb_behav -tclbatch $(MOD)_tb.tcl -gui -view $(MOD)_tb_behav.wcfg -log simulate.log
