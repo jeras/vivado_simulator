@@ -24,21 +24,26 @@ TBN+= $(PATH_LIB)/glbl.v
 
 SRC = $(RTL) $(TBN)
 
-MOD ?= axi4stream_vip_0_exdes
+MOD ?= axi4stream_vip_0_exdes_tb
+#MOD = axi_vip_0_exdes_tb
+#MOD = axi_vip_0_exdes_adv_mst_active__pt_passive__slv_comb
 
-ALL = simulate
+all: simulate
 
 .PHONY: compile elborate simulate
 
 
 OPT_COMPILE_LIB =-L xil_common_vip_v1_0_0
+OPT_COMPILE_LIB+=-L axi_vip_v1_0_2
 OPT_COMPILE_LIB+=-L axi4stream_vip_v1_0_1
 OPT_COMPILE_LIB+=-L xil_defaultlib
 
-OPT_COMPILE_INC =--include $(XILINX_VIVADO)/data/ip/xilinx/axi_vip_v1_0/hdl
-OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/xil_common_vip_v1_0/hdl/
+OPT_COMPILE_INC = -i $(PATH_TBN)/imports
+OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/xil_common_vip_v1_0/hdl
+OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/axi_vip_v1_0/hdl
 OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/axi4stream_vip_v1_0/hdl
-OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/processing_system7_vip_v1_0/hdl/
+OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/processing_system7_vip_v1_0/hdl
+OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/sc_util_v1_0/hdl/verilog
 
 OPT_COMPILE = $(OPT_COMPILE_LIB) $(OPT_COMPILE_INC)
 
@@ -49,9 +54,13 @@ compile: $(SRC)
 	$(foreach file,$(SRC),xvlog -m64 --relax $(OPT_COMPILE) --sv --work xil_defaultlib $(file);)
 
 
-OPT_ELABORATE_LIB =-L axis_infrastructure_v1_1_0
+OPT_ELABORATE_LIB =-L smartconnect_v1_0
+OPT_ELABORATE_LIB+=-L axi_infrastructure_v1_1_0
+OPT_ELABORATE_LIB+=-L axis_infrastructure_v1_1_0
 OPT_ELABORATE_LIB+=-L xil_common_vip_v1_0_0
+OPT_ELABORATE_LIB+=-L axi_protocol_checker_v1_1_14
 OPT_ELABORATE_LIB+=-L axis_protocol_checker_v1_1_13
+OPT_ELABORATE_LIB+=-L axi_vip_v1_0_2
 OPT_ELABORATE_LIB+=-L axi4stream_vip_v1_0_1
 OPT_ELABORATE_LIB+=-L xil_defaultlib
 OPT_ELABORATE_LIB+=-L unisims_ver
@@ -64,10 +73,10 @@ OPT_ELABORATE = $(OPT_ELABORATE_LIB)
 elaborate: compile
 #%_tb: elaborate
 	xelab -m64 --debug typical --relax $(OPT_ELABORATE) \
-	--snapshot $(MOD)_tb_behav xil_defaultlib.$(MOD)_tb xil_defaultlib.glbl -log elaborate.log
+	--snapshot $(MOD)_behav xil_defaultlib.$(MOD) xil_defaultlib.glbl -log elaborate.log
 #	--snapshot $@ xil_defaultlib.$@
 
 simulate: elaborate
 #	xsim $@ -gui -wdb simulate_xsim.wdb
-#	xsim $(MOD)_tb_behav -tclbatch $(MOD)_tb.tcl -log simulate.log
-	xsim $(MOD)_tb_behav -tclbatch $(MOD)_tb.tcl -gui -view $(MOD)_tb_behav.wcfg -log simulate.log
+#	xsim $(MOD)_behav -tclbatch $(MOD)_tb.tcl -log simulate.log
+	xsim $(MOD)_behav -tclbatch $(MOD)_tb.tcl -gui -view $(MOD)_behav.wcfg -log simulate.log
