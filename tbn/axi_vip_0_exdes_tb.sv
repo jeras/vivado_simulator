@@ -244,19 +244,16 @@ module axi_vip_0_exdes_tb(
   ex_sim_axi_vip_slv_0_slv_t                              slv_agent;
   ex_sim_axi_vip_passthrough_0_passthrough_t              passthrough_agent;
 
-  
-     
   // Clock signal
   bit                                     clock;
   // Reset signal
   bit                                     reset;
 
   // instantiate bd
-    chip DUT(
-        .aresetn(reset),
-  
-      .aclk(clock)
-    );
+  ex_sim DUT (
+    .aresetn (reset),
+    .aclk    (clock)
+  );
 
   initial begin
     reset <= 1'b1;
@@ -273,12 +270,12 @@ module axi_vip_0_exdes_tb(
     //----------------------------------------------------------------------------------------------
     // The hierarchy path of the AXI VIP's interface is passed to the agent when it is newed. 
     // Method to find the hierarchy path of AXI VIP is to run simulation without agents being newed, 
-    // message like "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.ex_design.axi_vip_mst.inst" will 
+    // message like "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.axi_vip_mst.inst" will 
     // be printed out.
     //----------------------------------------------------------------------------------------------
-    mst_agent = new("master vip agent",DUT.ex_design.axi_vip_mst.inst.IF);
-    slv_agent = new("slave vip agent",DUT.ex_design.axi_vip_slv.inst.IF);
-    passthrough_agent = new("passthrough vip agent",DUT.ex_design.axi_vip_passthrough.inst.IF);
+    mst_agent = new("master vip agent",DUT.axi_vip_mst.inst.IF);
+    slv_agent = new("slave vip agent",DUT.axi_vip_slv.inst.IF);
+    passthrough_agent = new("passthrough vip agent",DUT.axi_vip_passthrough.inst.IF);
     $timeformat (-12, 1, " ps", 1);
     //----------------------------------------------------------------------------------------------
     // set tag for agents for easy debug,if not set here, it will be hard to tell which driver is filing 
@@ -918,7 +915,7 @@ module axi_vip_0_exdes_tb(
     //----------------------------------------------------------------------------------------------
     // switch passthrough VIP inst to run time master mode by call task set_master_mode
     //----------------------------------------------------------------------------------------------
-    axi_vip_0_exdes_tb.DUT.ex_design.axi_vip_passthrough.inst.set_master_mode();
+    axi_vip_0_exdes_tb.DUT.axi_vip_passthrough.inst.set_master_mode();
     exdes_state = EXDES_PASSTHROUGH_MASTER;
     passthrough_agent.set_agent_tag("Passthrough VIP in Master mode");
     passthrough_agent.start_master();
@@ -999,7 +996,7 @@ module axi_vip_0_exdes_tb(
     // switch passthrough VIP inst to run time slave mode by call task set_slave_mode
     //----------------------------------------------------------------------------------------------
     #1ns;
-    axi_vip_0_exdes_tb.DUT.ex_design.axi_vip_passthrough.inst.set_slave_mode();
+    axi_vip_0_exdes_tb.DUT.axi_vip_passthrough.inst.set_slave_mode();
     exdes_state = EXDES_PASSTHROUGH_SLAVE;
     passthrough_agent.set_agent_tag("Passthrough VIP in Slave mode");
     passthrough_agent.stop_master();

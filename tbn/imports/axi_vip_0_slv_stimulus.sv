@@ -41,10 +41,10 @@ module axi_vip_0_slv_stimulus(
   initial begin
     /***********************************************************************************************    * Before agent is newed, user has to run simulation with an empty testbench to find the
     * hierarchy path of the AXI VIP's instance.Message like
-    * "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.ex_design.axi_vip_mst.inst" will be printed 
+    * "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.axi_vip_mst.inst" will be printed 
     * out. Pass this path to the new function. 
     ***********************************************************************************************/
-    agent = new("slave vip agent",DUT.ex_design.axi_vip_slv.inst.IF);
+    agent = new("slave vip agent",DUT.axi_vip_slv.inst.IF);
     
    /***********************************************************************************************    * Set tag for agents for easy debug especially multiple agents are called in one testbench
    ************************************************************************************************/

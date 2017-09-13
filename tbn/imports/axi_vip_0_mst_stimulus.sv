@@ -40,10 +40,10 @@ module axi_vip_0_mst_stimulus();
     /***********************************************************************************************
     * Before agent is newed, user has to run simulation with an empty testbench to find the hierarchy
     * path of the AXI VIP's instance.Message like
-    * "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.ex_design.axi_vip_mst.inst" will be printed 
+    * "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.axi_vip_mst.inst" will be printed 
     * out. Pass this path to the new function. 
     ***********************************************************************************************/
-    agent = new("master vip agent",DUT.ex_design.axi_vip_mst.inst.IF);
+    agent = new("master vip agent",DUT.axi_vip_mst.inst.IF);
     agent.start_master();                   // agent start to run
 
     fork                                    // Fork process of write/read transaction generation                    

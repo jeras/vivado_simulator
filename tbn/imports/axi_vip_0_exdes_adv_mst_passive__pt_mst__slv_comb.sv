@@ -18,9 +18,7 @@
 `include "axi_vip_0_passthrough_mst_stimulus.sv"
 `include "axi_vip_0_slv_stimulus.sv"
 
-module axi_vip_0_exdes_adv_mst_passive__pt_mst__slv_comb(
-  );
-     
+module axi_vip_0_exdes_adv_mst_passive__pt_mst__slv_comb ();
   // Clock signal
   bit                                     clock;
   // Reset signal
@@ -28,15 +26,13 @@ module axi_vip_0_exdes_adv_mst_passive__pt_mst__slv_comb(
   // event to stop simulation
   event                                   done_event;
 
-
   axi_vip_0_exdes_generic  generic_tb();
   axi_vip_0_passthrough_mst_stimulus mst();
   axi_vip_0_slv_stimulus slv();
 
   // instantiate bd
-  chip DUT(
-      .aresetn(reset),
-  
+  ex_sim DUT(
+    .aresetn(reset),
     .aclk(clock)
   );
 

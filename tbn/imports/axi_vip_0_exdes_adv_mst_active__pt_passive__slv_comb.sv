@@ -17,14 +17,11 @@
 `include "axi_vip_0_mst_stimulus.sv"
 `include "axi_vip_0_slv_stimulus.sv"
 
-module axi_vip_0_exdes_adv_mst_active__pt_passive__slv_comb(
-  );
-     
+module axi_vip_0_exdes_adv_mst_active__pt_passive__slv_comb ();
   // Clock signal
   bit                                     clock;
   // Reset signal
   bit                                     reset;
-
   // event to stop simulation
   event                                   done_event;
 
@@ -33,9 +30,8 @@ module axi_vip_0_exdes_adv_mst_active__pt_passive__slv_comb(
   axi_vip_0_slv_stimulus slv();
 
   // instantiate bd
-  chip DUT(
-      .aresetn(reset),
-  
+  ex_sim DUT(
+    .aresetn(reset),
     .aclk(clock)
   );
 
@@ -44,6 +40,5 @@ module axi_vip_0_exdes_adv_mst_active__pt_passive__slv_comb(
   end
   
   always #10 clock <= ~clock;
-  
 
 endmodule
