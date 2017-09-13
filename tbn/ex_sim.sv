@@ -10,11 +10,10 @@
 `timescale 1 ps / 1 ps
 
 (* CORE_GENERATION_INFO = "ex_sim,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=ex_sim,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=3,numReposBlks=3,numNonXlnxBlks=0,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=0,numPkgbdBlks=0,bdsource=USER,synth_mode=OOC_per_IP}" *) (* HW_HANDOFF = "ex_sim.hwdef" *) 
-module ex_sim
-   (aclk,
-    aresetn);
-  input aclk;
-  input aresetn;
+module ex_sim (
+  input aclk,
+  input aresetn
+);
 
   wire aclk_1;
   wire aresetn_1;
