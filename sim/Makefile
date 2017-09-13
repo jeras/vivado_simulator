@@ -24,9 +24,9 @@ TBN+= $(PATH_LIB)/glbl.v
 
 SRC = $(RTL) $(TBN)
 
-MOD ?= axi4stream_vip_0_exdes_tb
+#MOD ?= axi4stream_vip_0_exdes_tb
 #MOD = axi_vip_0_exdes_tb
-#MOD = axi_vip_0_exdes_adv_mst_active__pt_passive__slv_comb
+MOD = axi_vip_0_exdes_adv_mst_active__pt_passive__slv_comb
 
 all: simulate
 
@@ -35,7 +35,7 @@ all: simulate
 
 OPT_COMPILE_LIB =-L xil_common_vip_v1_0_0
 OPT_COMPILE_LIB+=-L axi_vip_v1_0_2
-OPT_COMPILE_LIB+=-L axi4stream_vip_v1_0_1
+#OPT_COMPILE_LIB+=-L axi4stream_vip_v1_0_1
 OPT_COMPILE_LIB+=-L xil_defaultlib
 
 OPT_COMPILE_INC = -i $(PATH_TBN)/imports
