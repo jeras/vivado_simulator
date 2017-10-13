@@ -1,4 +1,4 @@
-interface axi4_if #(
+interface axi3_if #(
   int unsigned   AW = 32,    // Address width
   int unsigned AWAW = AW,
   int unsigned ARAW = AW,
@@ -23,10 +23,10 @@ interface axi4_if #(
 logic [AWIW-1:0] AWID    ;
 logic [AWAW-1:0] AWADDR  ;
 logic    [4-1:0] AWREGION;
-logic    [4-1:0] AWLEN   ;
+logic    [8-1:0] AWLEN   ;
 logic    [3-1:0] AWSIZE  ;
 logic    [2-1:0] AWBURST ;
-logic    [2-1:0] AWLOCK  ;
+logic    [1-1:0] AWLOCK  ;
 logic    [4-1:0] AWCACHE ;
 logic    [3-1:0] AWPROT  ;
 logic    [4-1:0] AWQOS   ;
@@ -51,10 +51,10 @@ logic             BREADY ;
 logic [ARIW-1:0] ARID    ;
 logic [ARAW-1:0] ARADDR  ;
 logic    [4-1:0] ARREGION;
-logic    [4-1:0] ARLEN   ;
+logic    [8-1:0] ARLEN   ;
 logic    [3-1:0] ARSIZE  ;
 logic    [2-1:0] ARBURST ;
-logic    [2-1:0] ARLOCK  ;
+logic    [1-1:0] ARLOCK  ;
 logic    [4-1:0] ARCACHE ;
 logic    [3-1:0] ARPROT  ;
 logic    [4-1:0] ARQOS   ;
@@ -170,4 +170,4 @@ modport s (
   input   RREADY
 );
 
-endinterface: axi4_if
+endinterface: axi3_if
