@@ -50,7 +50,7 @@
 
 `timescale 1ns / 1ps
 // import package 
-import axi_vip_v1_0_2_pkg::*;
+import axi_vip_pkg::*;
 import ex_sim_axi_vip_mst_0_pkg::*;
 import ex_sim_axi_vip_slv_0_pkg::*;
 import ex_sim_axi_vip_passthrough_0_pkg::*;

@@ -13,7 +13,7 @@
 * For Master VIP to work correctly, user environment MUST have the lists of item below and 
 * follow this order.
 *    1. import two packages.
-*       import axi4stream_vip_v1_0_1_pkg::* 
+*       import axi4stream_vip_pkg::* 
 *       import axi4stream_vip_mst_0_pkg::*;
 *    2. delcare "component_name"_mst_t agent
 *    3. new agent (passing instance IF correctly)
@@ -29,7 +29,7 @@
 * For Slave VIP to work correctly, user environment MUST have the lists of item below and
 * follow this order.
 *    1. import two packages.
-*       import axi4stream_vip_v1_0_1_pkg::* 
+*       import axi4stream_vip_pkg::* 
 *       import axi4stream_vip_slv_0_pkg::*;
 *    2. delcare "component_name"_slv_t agent
 *    3. new agent (passing instance IF correctly)
@@ -46,7 +46,7 @@
 * As described above, this design has all three VIPs. so it includes all three packages plus 
 * axi4stream_vip_v1_0_1_pkg
 ***************************************************************************************************/
-import axi4stream_vip_v1_0_1_pkg::*;
+import axi4stream_vip_pkg::*;
 import axi4stream_vip_mst_0_pkg::*;
 import axi4stream_vip_slv_0_pkg::*;
 

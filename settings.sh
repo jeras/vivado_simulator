@@ -2,4 +2,4 @@
 # setup Xilinx Vivado FPGA tools
 ################################################################################
 
-. /opt/Xilinx/Vivado/2018.1/settings64.sh
+. /opt/Xilinx/Vivado/2019.2/settings64.sh

@@ -8,7 +8,7 @@
 // passthrough AXI VIP and the other scoreboard checks slave AXI VIP against passthrough AXI VIP
 // Three methods to setup the transaction after it is being created are done in some of the example tests
 
-import axi_vip_v1_0_2_pkg::*;
+import axi_vip_pkg::*;
 
 module axi_vip_0_exdes_generic(
   );

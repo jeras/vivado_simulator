@@ -15,7 +15,8 @@
 * As for ready generation, if user enviroment doesn't do anything, it will randomly generate ready
 * siganl,if user wants to create his own ready signal, please refer task user_gen_wready. 
 ***************************************************************************************************/
-import axi_vip_v1_0_2_pkg::*;
+
+import axi_vip_pkg::*;
 import ex_sim_axi_vip_slv_0_pkg::*;
 
 module axi_vip_0_slv_stimulus(

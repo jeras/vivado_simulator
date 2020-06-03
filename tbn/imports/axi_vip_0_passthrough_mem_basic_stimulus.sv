@@ -20,7 +20,7 @@
 *    5. start_slave
 ***************************************************************************************************/
 
-import axi_vip_v1_0_2_pkg::*;
+import axi_vip_pkg::*;
 import ex_sim_axi_vip_passthrough_0_pkg::*;
 
 module axi_vip_0_passthrough_mem_basic_stimulus(

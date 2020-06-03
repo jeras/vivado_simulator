@@ -1,6 +1,6 @@
 package axi4stream_vip_mst_0_pkg;
 
-import axi4stream_vip_v1_0_1_pkg::*;
+import axi4stream_vip_pkg::*;
 
 parameter axi4stream_vip_mst_0_VIP_INTERFACE_MODE     = 0;
 parameter axi4stream_vip_mst_0_VIP_SIGNAL_SET         = 8'B00000011;

@@ -18,7 +18,7 @@
 ***************************************************************************************************/
 
 
-import axi_vip_v1_0_2_pkg::*;
+import axi_vip_pkg::*;
 import ex_sim_axi_vip_slv_0_pkg::*;
 
 module axi_vip_0_mem_stimulus(

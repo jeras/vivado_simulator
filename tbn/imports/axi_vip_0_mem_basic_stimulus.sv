@@ -7,7 +7,7 @@
 * This file shows basic features of Slave VIP with memory model 
 * For Slave VIP with memory model to work correctly,the following four things must be done
 *    1. import two packages.(this information also shows at the xgui of the VIP)
-*         import axi_vip_v1_0_2_pkg::* 
+*         import axi_vip_v1_1_6_pkg::* 
 *         import "component_name"_pkg::*;
 *    2. delcare "component_name"_slv_mem_t agent
 *    3. new agent (passing instance IF correctly)
@@ -15,7 +15,7 @@
 ***************************************************************************************************/
 
 
-import axi_vip_v1_0_2_pkg::*;
+import axi_vip_pkg::*;
 import ex_sim_axi_vip_slv_0_pkg::*;
 
 module axi_vip_0_mem_basic_stimulus(

@@ -23,7 +23,7 @@
 * More details about generate transaction please refer task wr/rd_tran_method_one/two
 ***************************************************************************************************/
 
-import axi_vip_v1_0_2_pkg::*;
+import axi_vip_pkg::*;
 import ex_sim_axi_vip_mst_0_pkg::*;
 
 module axi_vip_0_mst_stimulus();

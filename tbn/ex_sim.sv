@@ -15,34 +15,32 @@ module ex_sim (
   input aresetn
 );
 
-localparam C_AXI_PROTOCOL = 0;
+localparam PROTOCOL = 0;
 
-axi3_if #(.AW (32), .DW (32), .IW (1)) axi_mst (.ACLK (aclk), .ARESETn (aresetn));
-axi3_if #(.AW (32), .DW (32), .IW (1)) axi_slv (.ACLK (aclk), .ARESETn (aresetn));
+axi4_if #(.AW (32), .DW (32), .IW (1)) axi_mst (.ACLK (aclk), .ARESETn (aresetn));
+axi4_if #(.AW (32), .DW (32), .IW (1)) axi_slv (.ACLK (aclk), .ARESETn (aresetn));
 
-ex_sim_axi_vip #(
-  .PROTOCOL  (C_AXI_PROTOCOL),
+ex_sim_axi_vip_mst_0 #(
+  .PROTOCOL  (PROTOCOL),
   .WID_WIDTH (0),
   .RID_WIDTH (0)
 ) axi_vip_mst (
   .m_axi (axi_mst)
-  .s_axi (axi_mst_dummy)
 );
 
 ex_sim_axi_vip_passthrough_0 #(
-  .C_AXI_PROTOCOL (C_AXI_PROTOCOL)
+  .PROTOCOL (PROTOCOL)
 ) axi_vip_passthrough (
   .m_axi (axi_mst),
   .s_axi (axi_slv)
 );
 
 ex_sim_axi_vip_slv_0 #(
-  .C_AXI_PROTOCOL (C_AXI_PROTOCOL)
+  .PROTOCOL (PROTOCOL)
 ) axi_vip_slv (
-  .m_axi (axi_slv_dummy),
   .s_axi (axi_slv)
 );
 
-axi2_slv_dummy 
+//axi2_slv_dummy 
 
 endmodule: ex_sim

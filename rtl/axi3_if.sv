@@ -7,6 +7,11 @@ interface axi3_if #(
   int unsigned  RDW = DW,
   int unsigned  WSW = WDW/8, // Select  width
   int unsigned   IW = 1,     // ID      width
+  int unsigned AWIW = IW,
+  int unsigned ARIW = IW,
+  int unsigned  WIW = IW,
+  int unsigned  BIW = IW,
+  int unsigned  RIW = IW,
   int unsigned   UW = 0,     // user width
   int unsigned AWUW = UW,
   int unsigned  WUW = UW,

@@ -6,6 +6,15 @@ PATH_TBN=../tbn
 #LIB=$(PATH_LIB)/glbl.v
 
 # TODO: VIP for AXI4 memory mapped interfaces, and ZYNQ PS
+LIB+=$(XILINX_VIVADO)/data/xilinx_vip/hdl/axi4stream_vip_axi4streampc.sv
+LIB+=$(XILINX_VIVADO)/data/xilinx_vip/hdl/axi_vip_axi4pc.sv
+LIB+=$(XILINX_VIVADO)/data/xilinx_vip/hdl/xil_common_vip_pkg.sv
+LIB+=$(XILINX_VIVADO)/data/xilinx_vip/hdl/axi4stream_vip_pkg.sv
+LIB+=$(XILINX_VIVADO)/data/xilinx_vip/hdl/axi_vip_pkg.sv
+LIB+=$(XILINX_VIVADO)/data/xilinx_vip/hdl/axi4stream_vip_if.sv
+LIB+=$(XILINX_VIVADO)/data/xilinx_vip/hdl/axi_vip_if.sv
+LIB+=$(XILINX_VIVADO)/data/xilinx_vip/hdl/clk_vip_if.sv
+LIB+=$(XILINX_VIVADO)/data/xilinx_vip/hdl/rst_vip_if.sv
 
 # RTL files
 RTL_PKG =$(wildcard $(PATH_RTL)/*_pkg.sv)
@@ -22,7 +31,7 @@ TBN_DIF =$(filter-out $(TBN_PKG),$(TBN_SRC))
 TBN = $(TBN_PKG) $(TBN_DIF)
 TBN+= $(PATH_LIB)/glbl.v
 
-SRC = $(RTL) $(TBN)
+SRC = $(LIB) $(RTL) $(TBN)
 
 #MOD ?= axi4stream_vip_0_exdes_tb
 #MOD = axi_vip_0_exdes_tb
@@ -33,16 +42,18 @@ all: simulate
 .PHONY: compile elborate simulate
 
 
-OPT_COMPILE_LIB =-L xil_common_vip_v1_0_0
-OPT_COMPILE_LIB+=-L axi_vip_v1_0_2
-#OPT_COMPILE_LIB+=-L axi4stream_vip_v1_0_1
+OPT_COMPILE_LIB =-L xilinx_vip
+OPT_COMPILE_LIB+=-L xil_common_vip
+OPT_COMPILE_LIB+=-L axi_vip_v1_1_6
+OPT_COMPILE_LIB+=-L axi4stream_vip_v1_1_6
 OPT_COMPILE_LIB+=-L xil_defaultlib
 
 OPT_COMPILE_INC = -i $(PATH_TBN)/imports
-OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/xil_common_vip_v1_0/hdl
-OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/axi_vip_v1_0/hdl
-OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/axi4stream_vip_v1_0/hdl
-OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/processing_system7_vip_v1_0/hdl
+OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/xilinx_vip/include
+OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/xilinx_vip/hdl
+OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/axi_vip_v1_1/hdl
+OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/axi4stream_vip_v1_1/hdl
+OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/processing_system7_vip_v5_5/hdl
 OPT_COMPILE_INC+=--include $(XILINX_VIVADO)/data/ip/xilinx/sc_util_v1_0/hdl/verilog
 
 OPT_COMPILE = $(OPT_COMPILE_LIB) $(OPT_COMPILE_INC)
@@ -55,13 +66,14 @@ compile: $(SRC)
 
 
 OPT_ELABORATE_LIB =-L smartconnect_v1_0
+OPT_ELABORATE_LIB+=-L axi_vip_if
 OPT_ELABORATE_LIB+=-L axi_infrastructure_v1_1_0
 OPT_ELABORATE_LIB+=-L axis_infrastructure_v1_1_0
 OPT_ELABORATE_LIB+=-L xil_common_vip_v1_0_0
-OPT_ELABORATE_LIB+=-L axi_protocol_checker_v1_1_14
-OPT_ELABORATE_LIB+=-L axis_protocol_checker_v1_1_13
-OPT_ELABORATE_LIB+=-L axi_vip_v1_0_2
-OPT_ELABORATE_LIB+=-L axi4stream_vip_v1_0_1
+OPT_ELABORATE_LIB+=-L axi_protocol_checker_v2_0_6
+OPT_ELABORATE_LIB+=-L axis_protocol_checker_v2_0_4
+OPT_ELABORATE_LIB+=-L axi_vip_v1_1_6
+OPT_ELABORATE_LIB+=-L axi4stream_vip_v1_1_6
 OPT_ELABORATE_LIB+=-L xil_defaultlib
 OPT_ELABORATE_LIB+=-L unisims_ver
 OPT_ELABORATE_LIB+=-L unimacro_ver
