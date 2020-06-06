@@ -11,9 +11,9 @@
 * For Passthrough VIP in run time slave mode to work correctly, user environment MUST have the
 * lists of item below and follow this order.
 *    1. import two packages.(this information also shows at the xgui of the VIP)
-*         import axi_vip_v1_0_2_pkg::* 
-*         import "component_name"_pkg::*;
-*    2. delcare "component_name"_passthrough_t agent
+*         import axi_vip_pkg::* 
+*         import <component_name>_pkg::*;
+*    2. delcare <component_name>_passthrough_t agent
 *    3. new agent (passing instance IF correctly)
 *    4. switch passthrough mode into run time slave mode
 *    5. start_slave
@@ -22,7 +22,7 @@
 * siganl, if user wants to create his own ready signal, please refer task user_gen_wready 
 ***************************************************************************************************/
 
-import axi_vip_v1_0_2_pkg::*;
+import axi_vip_pkg::*;
 import ex_sim_axi_vip_passthrough_0_pkg::*;
 
 module axi_vip_0_passthrough_slv_stimulus(
@@ -38,8 +38,8 @@ module axi_vip_0_passthrough_slv_stimulus(
   xil_axi_payload_byte                    data_mem[xil_axi_ulong];
 
   /*************************************************************************************************
-  * Declare "component_name"_passthrough_t for passthrough agent
-  * "Component_name" can be easily found in vivado bd design: click on the instance, 
+  * Declare <component_name>_passthrough_t for passthrough agent
+  * <component_name> can be easily found in vivado bd design: click on the instance, 
   * Then click CONFIG under Properties window and Component_Name will be shown
   * More details please refer PG267 for more details
   *************************************************************************************************/
@@ -87,6 +87,8 @@ module axi_vip_0_passthrough_slv_stimulus(
   * set high time
   * agent's write driver send_arready out
   * ready generation policy are listed below:
+  *  XIL_AXI_READY_GEN_NO_BACKPRESSURE     - Ready stays asserted and will not change. The driver
+                                             will still check for policy changes.
   *   XIL_AXI_READY_GEN_SINGLE             - Ready stays 0 for low_time clock cycles and then
                                              dirves 1 until one ready/valid handshake occurs,
                                              the policy repeats until the channel is given

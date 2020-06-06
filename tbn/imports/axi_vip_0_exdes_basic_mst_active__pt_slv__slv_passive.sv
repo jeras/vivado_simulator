@@ -18,11 +18,14 @@
 `include "axi_vip_0_mst_stimulus.sv"
 `include "axi_vip_0_passthrough_slv_basic_stimulus.sv"
 
-module axi_vip_0_exdes_basic_mst_active__pt_slv__slv_passive ();
+module axi_vip_0_exdes_basic_mst_active__pt_slv__slv_passive(
+  );
+     
   // Clock signal
   bit                                     clock;
   // Reset signal
   bit                                     reset;
+
   // event to stop simulation
   event                                   done_event;
 
@@ -33,7 +36,8 @@ module axi_vip_0_exdes_basic_mst_active__pt_slv__slv_passive ();
 
   // instantiate bd
   ex_sim DUT(
-    .aresetn(reset),
+      .aresetn(reset),
+  
     .aclk(clock)
   );
 

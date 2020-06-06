@@ -12,9 +12,9 @@
 * In order to make Passthrough VIP in run time slave mode with memory model work, user environment
 * MUST have the lists of item below and follow this order.
 *    1. import two packages.(this information also shows at the xgui of the VIP)
-*         import axi_vip_v1_0_2_pkg::* 
-*         import "component_name"_pkg::*;
-*    2. delcare "component_name"_passthrough_mem_t agent
+*         import axi_vip_pkg::* 
+*         import <component_name>_pkg::*;
+*    2. delcare <component_name>_passthrough_mem_t agent
 *    3. new agent (passing instance IF correctly)
 *    4. switch passthrough VIP into run time slave mode
 *    5. start_slave
@@ -27,8 +27,8 @@ module axi_vip_0_passthrough_mem_basic_stimulus(
   );
  
   /*************************************************************************************************
-  * Declare "component_name"_passhthrough_mem_t for passthrough with memory model agent
-  * "Component_name" can be easily found in vivado bd design: click on the instance, 
+  * Declare <component_name>_passhthrough_mem_t for passthrough with memory model agent
+  * <component_name> can be easily found in vivado bd design: click on the instance, 
   * Then click CONFIG under Properties window and Component_Name will be shown
   * More details please refer PG267 for more details
   *************************************************************************************************/

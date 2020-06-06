@@ -12,14 +12,14 @@
 * READ_WRITE/WRITE_ONLY mode, call task rd_response if slave VIP is configured with
 * READ_WRITE/READ_ONLY mode. otherwise, Fatal will occur.
 *    1. import two packages.(this information also shows at the xgui of the VIP)
-*         import axi_vip_v1_0_2_pkg::* 
-*         import "component_name"_pkg::*;
-*    2. delcare "component_name"_slv_t agent
+*         import axi_vip_pkg::* 
+*         import <component_name>_pkg::*;
+*    2. delcare <component_name>_slv_t agent
 *    3. new agent (passing instance IF correctly)
 *    4. start_slave
 *    5. wr/rd_response
 ***************************************************************************************************/
-import axi_vip_v1_0_2_pkg::*;
+import axi_vip_pkg::*;
 import ex_sim_axi_vip_slv_0_pkg::*;
 
 module axi_vip_0_slv_basic_stimulus(
@@ -36,8 +36,8 @@ module axi_vip_0_slv_basic_stimulus(
   xil_axi_payload_byte                    data_mem[xil_axi_ulong];
 
   /*************************************************************************************************
-  * Declare "component_name"_slv_t for slave agent
-  * "component_name" can be easily found in vivado bd design: click on the instance, 
+  * Declare <component_name>_slv_t for slave agent
+  * <component_name> can be easily found in vivado bd design: click on the instance, 
   * then click CONFIG under Properties window and Component_Name will be shown
   * more details please refer PG267 for more details
   *************************************************************************************************/

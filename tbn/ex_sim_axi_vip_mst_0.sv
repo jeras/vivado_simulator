@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2017 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2020 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -47,15 +47,15 @@
 // DO NOT MODIFY THIS FILE.
 
 
-// IP VLNV: xilinx.com:ip:axi_vip:1.0
-// IP Revision: 2
+// IP VLNV: xilinx.com:ip:axi_vip:1.1
+// IP Revision: 6
 
 `timescale 1ns/1ps
 
 (* DowngradeIPIdentifiedWarnings = "yes" *)
 module ex_sim_axi_vip_mst_0 #(
-  int unsigned PROTOCOL        = 0,
-  int unsigned INTERFACE_MODE  = 1,
+  int unsigned PROTOCOL        = 2,
+  int unsigned INTERFACE_MODE  = 0,
   int unsigned ADDR_WIDTH      = 32,
   int unsigned WDATA_WIDTH     = 32,
   int unsigned RDATA_WIDTH     = 32,
@@ -66,24 +66,24 @@ module ex_sim_axi_vip_mst_0 #(
   int unsigned WUSER_WIDTH     = 0,
   int unsigned RUSER_WIDTH     = 0,
   int unsigned BUSER_WIDTH     = 0,
-  int unsigned SUPPORTS_NARROW = 1,
-  int unsigned HAS_BURST       = 1,
-  int unsigned HAS_LOCK        = 1,
-  int unsigned HAS_CACHE       = 1,
-  int unsigned HAS_REGION      = 1,
+  int unsigned SUPPORTS_NARROW = 0,
+  int unsigned HAS_BURST       = 0,
+  int unsigned HAS_LOCK        = 0,
+  int unsigned HAS_CACHE       = 0,
+  int unsigned HAS_REGION      = 0,
   int unsigned HAS_PROT        = 1,
-  int unsigned HAS_QOS         = 1,
+  int unsigned HAS_QOS         = 0,
   int unsigned HAS_WSTRB       = 1,
   int unsigned HAS_BRESP       = 1,
   int unsigned HAS_RRESP       = 1,
   int unsigned HAS_ARESETN     = 1
 )(
-  axi4_if.m m_axi
+  axi_if.m m_axi
 );
 
 axi_vip_v1_1_6_top #(
   .C_AXI_PROTOCOL        (PROTOCOL       ),
-  .C_AXI_INTERFACE_MODE  (INTERFACE_MODE ),
+  .C_AXI_INTERFACE_MODE  (0),
   .C_AXI_ADDR_WIDTH      (ADDR_WIDTH     ),
   .C_AXI_WDATA_WIDTH     (WDATA_WIDTH    ),
   .C_AXI_RDATA_WIDTH     (RDATA_WIDTH    ),
@@ -107,13 +107,13 @@ axi_vip_v1_1_6_top #(
   .C_AXI_HAS_ARESETN     (HAS_ARESETN    )
 ) inst (
   .aclk           (m_axi.ACLK),
-  .aclken         (1'B1),
+  .aclken         (m_axi.ACLKEN),
   .aresetn        (m_axi.ARESETn),
 
   .s_axi_awid     (1'B0),
   .s_axi_awaddr   (32'B0),
   .s_axi_awlen    (8'B0),
-  .s_axi_awsize   (3'D2),
+  .s_axi_awsize   (3'B0),
   .s_axi_awburst  (2'B1),
   .s_axi_awlock   (1'B0),
   .s_axi_awcache  (4'B0),
@@ -138,7 +138,7 @@ axi_vip_v1_1_6_top #(
   .s_axi_arid     (1'B0),
   .s_axi_araddr   (32'B0),
   .s_axi_arlen    (8'B0),
-  .s_axi_arsize   (3'D2),
+  .s_axi_arsize   (3'B0),
   .s_axi_arburst  (2'B1),
   .s_axi_arlock   (1'B0),
   .s_axi_arcache  (4'B0),
@@ -156,51 +156,51 @@ axi_vip_v1_1_6_top #(
   .s_axi_rvalid   (),
   .s_axi_rready   (1'B0),
 
-  .m_axi_awid     (),
-  .m_axi_awaddr   (m_axi.AWADDR),
-  .m_axi_awlen    (m_axi.AWLEN),
-  .m_axi_awsize   (m_axi.AWSIZE),
-  .m_axi_awburst  (m_axi.AWBURST),
-  .m_axi_awlock   (m_axi.AWLOCK),
-  .m_axi_awcache  (m_axi.AWCACHE),
-  .m_axi_awprot   (m_axi.AWPROT),
+  .m_axi_awid     (m_axi.AWID    ),
+  .m_axi_awaddr   (m_axi.AWADDR  ),
+  .m_axi_awlen    (m_axi.AWLEN   ),
+  .m_axi_awsize   (m_axi.AWSIZE  ),
+  .m_axi_awburst  (m_axi.AWBURST ),
+  .m_axi_awlock   (m_axi.AWLOCK  ),
+  .m_axi_awcache  (m_axi.AWCACHE ),
+  .m_axi_awprot   (m_axi.AWPROT  ),
   .m_axi_awregion (m_axi.AWREGION),
-  .m_axi_awqos    (m_axi.AWQOS),
-  .m_axi_awuser   (),
-  .m_axi_awvalid  (m_axi.AWVALID),
-  .m_axi_awready  (m_axi.AWREADY),
-  .m_axi_wid      (m_axi.WID),
-  .m_axi_wdata    (m_axi.WDATA),
-  .m_axi_wstrb    (m_axi.WSTRB),
-  .m_axi_wlast    (m_axi.WLAST),
-  .m_axi_wuser    (),
-  .m_axi_wvalid   (m_axi.WVALID),
-  .m_axi_wready   (m_axi.WREADY),
-  .m_axi_bid      (m_axi.BID),
-  .m_axi_bresp    (m_axi.BRESP),
-  .m_axi_buser    (1'B0),
-  .m_axi_bvalid   (m_axi.BVALID),
-  .m_axi_bready   (m_axi.BREADY),
-  .m_axi_arid     (m_axi.ARID),
-  .m_axi_araddr   (m_axi.ARADDR),
-  .m_axi_arlen    (m_axi.ARLEN),
-  .m_axi_arsize   (m_axi.ARSIZE),
-  .m_axi_arburst  (m_axi.ARBURST),
-  .m_axi_arlock   (m_axi.ARLOCK),
-  .m_axi_arcache  (m_axi.ARCACHE),
-  .m_axi_arprot   (m_axi.ARPROT),
+  .m_axi_awqos    (m_axi.AWQOS   ),
+  .m_axi_awuser   (m_axi.AWUSER  ),
+  .m_axi_awvalid  (m_axi.AWVALID ),
+  .m_axi_awready  (m_axi.AWREADY ),
+  .m_axi_wid      (m_axi.WID     ),
+  .m_axi_wdata    (m_axi.WDATA   ),
+  .m_axi_wstrb    (m_axi.WSTRB   ),
+  .m_axi_wlast    (m_axi.WLAST   ),
+  .m_axi_wuser    (m_axi.WUSER   ),
+  .m_axi_wvalid   (m_axi.WVALID  ),
+  .m_axi_wready   (m_axi.WREADY  ),
+  .m_axi_bid      (m_axi.BID     ),
+  .m_axi_bresp    (m_axi.BRESP   ),
+  .m_axi_buser    (m_axi.BUSER   ),
+  .m_axi_bvalid   (m_axi.BVALID  ),
+  .m_axi_bready   (m_axi.BREADY  ),
+  .m_axi_arid     (m_axi.ARID    ),
+  .m_axi_araddr   (m_axi.ARADDR  ),
+  .m_axi_arlen    (m_axi.ARLEN   ),
+  .m_axi_arsize   (m_axi.ARSIZE  ),
+  .m_axi_arburst  (m_axi.ARBURST ),
+  .m_axi_arlock   (m_axi.ARLOCK  ),
+  .m_axi_arcache  (m_axi.ARCACHE ),
+  .m_axi_arprot   (m_axi.ARPROT  ),
   .m_axi_arregion (m_axi.ARREGION),
-  .m_axi_arqos    (m_axi.ARQOS),
-  .m_axi_aruser   (),
-  .m_axi_arvalid  (m_axi.ARVALID),
-  .m_axi_arready  (m_axi.ARREADY),
-  .m_axi_rid      (m_axi.RID),
-  .m_axi_rdata    (m_axi.RDATA),
-  .m_axi_rresp    (m_axi.RRESP),
-  .m_axi_rlast    (m_axi.RLAST),
-  .m_axi_ruser    (1'B0),
-  .m_axi_rvalid   (m_axi.RVALID),
-  .m_axi_rready   (m_axi.RREADY)
+  .m_axi_arqos    (m_axi.ARQOS   ),
+  .m_axi_aruser   (m_axi.ARUSER  ),
+  .m_axi_arvalid  (m_axi.ARVALID ),
+  .m_axi_arready  (m_axi.ARREADY ),
+  .m_axi_rid      (m_axi.RID     ),
+  .m_axi_rdata    (m_axi.RDATA   ),
+  .m_axi_rresp    (m_axi.RRESP   ),
+  .m_axi_rlast    (m_axi.RLAST   ),
+  .m_axi_ruser    (m_axi.RUSER   ),
+  .m_axi_rvalid   (m_axi.RVALID  ),
+  .m_axi_rready   (m_axi.RREADY  )
 );
 
 endmodule: ex_sim_axi_vip_mst_0

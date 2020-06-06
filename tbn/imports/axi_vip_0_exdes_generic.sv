@@ -57,6 +57,10 @@ module axi_vip_0_exdes_generic(
     mst_monitor_transaction = new("master monitor transaction");
     forever begin
       mst.agent.monitor.item_collected_port.get(mst_monitor_transaction);
+      if(mst_monitor_transaction.get_cmd_type() == XIL_AXI_READ) begin
+        monitor_rd_data_method_one(mst_monitor_transaction);
+        monitor_rd_data_method_two(mst_monitor_transaction);
+      end  
       master_moniter_transaction_queue.push_back(mst_monitor_transaction);
       master_moniter_transaction_queue_size++;
     end  
@@ -97,5 +101,70 @@ module axi_vip_0_exdes_generic(
       end 
     end
   end
+ 
   
+  /*************************************************************************************************
+  * There are two ways to get read data. One is to get it through the read driver of master agent
+  * (refer to driver_rd_data_method_one, driver_rd_data_method_two in *mst_stimulus.sv file).
+  * The other is to get it through the monitor of VIP,  
+  * To get data from monitor, follow these steps:
+  * step 1: Get the monitor transaction from item_collected_port. In this example, it comes 
+  * from the master agent.
+  * step 2: If the cmd type is XIL_AXI_READ in the monitor transaction, use get_data_beat,
+  * get_data_block to get the read data. If the cmd type is XIL_AXI_WRITE in the monitor
+  * transaction, use get_data_beat, get_data_block to get the write data
+  *
+  * monitor_rd_data_method_one shows how to get a data beat through the monitor transaction
+  * monitor_rd_data_method_two shows how to get data block through the monitor transaction
+  * 
+  * Note on API get_data_beat: get_data_beat returns the value of the specified beat. 
+  * It always returns 1024 bits. It aligns the signification bytes to the lower 
+  * bytes and sets the unused bytes to zeros.
+  * This is NOT always the RDATA representation. If the data width is 32-bit and 
+  * the transaction is sub-size burst (1B in this example), only the last byte of 
+  * get_data_beat is valid. This is very different from the Physical Bus.
+  * 
+  * get_data_bit             Physical Bus
+  * 1024  ...      0          32        0
+  * ----------------         -----------
+  * |             X|         |        X| 
+  * |             X|         |      X  |
+  * |             X|         |    X    |
+  * |             X|         | X       |
+  * ----------------         -----------
+  *
+  * Note on API get_data_block: get_data_block returns 4K bytes of the payload
+  * for the transaction. This is NOT always the RDATA representation.  If the data
+  * width is 32-bit and the transaction is sub-size burst (1B in this example),
+  * It will align the signification bytes to the lower bytes and set the unused 
+  * bytes to zeros.
+  *
+  *   get_data_block          Physical Bus
+  *   32    ...      0         32        0
+  * 0 ----------------         -----------
+  *   | D   C   B   A|         |        A| 
+  *   | 0   0   0   0|         |      B  |
+  *   | 0   0   0   0|         |    C    |
+  *   | 0   0   0   0|         | D       |
+  *   | 0   0   0   0|         -----------
+  *   | 0   0   0   0|         
+  * 1k----------------         
+  *
+  *************************************************************************************************/
+  task monitor_rd_data_method_one(input axi_monitor_transaction updated);
+    xil_axi_data_beat                       mtestDataBeat[];
+    mtestDataBeat = new[updated.get_len()+1];
+    for( xil_axi_uint beat=0; beat<updated.get_len()+1; beat++) begin
+      mtestDataBeat[beat] = updated.get_data_beat(beat);
+    //  $display(" Read data from Monitor: beat index %d, Data beat %h", beat, mtestDataBeat[beat]);
+    end  
+  endtask
+
+  task monitor_rd_data_method_two(input axi_monitor_transaction updated);
+    bit[8*4096-1:0]                         data_block;
+    data_block = updated.get_data_block();
+  //  $display(" Read data from Monitor: Block Data %h ", data_block);
+  endtask
+
+
 endmodule

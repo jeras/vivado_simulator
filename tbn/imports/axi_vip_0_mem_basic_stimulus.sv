@@ -7,9 +7,9 @@
 * This file shows basic features of Slave VIP with memory model 
 * For Slave VIP with memory model to work correctly,the following four things must be done
 *    1. import two packages.(this information also shows at the xgui of the VIP)
-*         import axi_vip_v1_1_6_pkg::* 
-*         import "component_name"_pkg::*;
-*    2. delcare "component_name"_slv_mem_t agent
+*         import axi_vip_pkg::* 
+*         import <component_name>_pkg::*;
+*    2. delcare <component_name>_slv_mem_t agent
 *    3. new agent (passing instance IF correctly)
 *    4. start_slave
 ***************************************************************************************************/
@@ -22,8 +22,8 @@ module axi_vip_0_mem_basic_stimulus(
   );
  
   /*************************************************************************************************
-  * Declare "component_name"_slv_mem_t for slave mem agent
-  * "component_name" can be easily found in vivado bd design: click on the instance, 
+  * Declare <component_name>_slv_mem_t for slave mem agent
+  * <component_name> can be easily found in vivado bd design: click on the instance, 
   * then click CONFIG under Properties window and Component_Name will be shown
   * more details please refer PG267 for more details
   *************************************************************************************************/

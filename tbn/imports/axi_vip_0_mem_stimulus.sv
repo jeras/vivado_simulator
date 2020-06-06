@@ -8,9 +8,9 @@
 * backdoor access(read/write)
 * For Slave VIP with memory model to work correctly,the following four things must be done
 *    1. import two packages.(this information also shows at the xgui of the VIP)
-*         import axi_vip_v1_0_2_pkg::* 
-*         import "component_name"_pkg::*;
-*    2. delcare "component_name"_slv_mem_t agent
+*         import axi_vip_pkg::* 
+*         import <component_name>_pkg::*;
+*    2. delcare <component_name>_slv_mem_t agent
 *    3. new agent (passing instance IF correctly)
 *    4. start_slave
 * As for ready generation, if user enviroment doesn't do anything, it will randomly generate ready
@@ -25,13 +25,30 @@ module axi_vip_0_mem_stimulus(
   );
  
  /*************************************************************************************************
-  * Declare "component_name"_slv_mem_t for slave mem agent
-  * "component_name" can be easily found in vivado bd design: click on the instance, 
+  * Declare <component_name>_slv_mem_t for slave mem agent
+  * <component_name> can be easily found in vivado bd design: click on the instance, 
   * then click CONFIG under Properties window and Component_Name will be shown
   * more details please refer PG267 for more details
   *************************************************************************************************/
   ex_sim_axi_vip_slv_0_slv_mem_t                          agent;
+  
+  /************************************************************************************************
+  * Declare payload, address, data and strobe for back door memory write/read
+  * xil_axi_ulong                                           mem_wr_addr;
+  * xil_axi_ulong                                           mem_rd_addr;
+  * bit[DATA_WIDTH-1:0]                                     mem_wr_data;
+  * bit[(DATA_WIDTH/8)-1:0]                                 mem_wr_strb;
+  * bit[DATA_WIDTH-1:0]                                     mem_rd_data;
+  * bit[DATA_WIDTH-1:0]                                     mem_fill_payload;
+  ***********************************************************************************************/
 
+  xil_axi_ulong                                           mem_wr_addr;
+  xil_axi_ulong                                           mem_rd_addr;
+  bit[32-1:0]                              mem_wr_data;
+  bit[(32/8)-1:0]                          mem_wr_strb;
+  bit[32-1:0]                              mem_rd_data;
+  bit[32-1:0]                              mem_fill_payload;
+ 
   initial begin
   /************************************************************************************************
     * Before agent is newed, user has to run simulation with an empty testbench to find the 
@@ -53,11 +70,27 @@ module axi_vip_0_mem_stimulus(
     *    0       - No information will be printed out.
     *   400      - All information will be printed out
     ***********************************************************************************************/
+
     agent.set_verbosity(0);  
     agent.start_slave();    // agent starts to run
-    backdoor_mem_write();   // Call task to do back door memory write  
-    backdoor_mem_read();   // Call task to do back door memory read
-    user_gen_wready();     // call task to generate wready 
+
+    /***********************************************************************************************
+    * Backdoor memory tasks
+    * 1.fill fixed default value to memory 
+    *    user can choose task set_mem_default_value_fixed or set_mem_default_value_rand
+    *    in this testcase the former is being used
+    * 2. do a backdoor memory write
+    * 3. do a backdoor memory read
+    ***********************************************************************************************/
+    mem_fill_payload = 1;
+    set_mem_default_value_fixed(mem_fill_payload); // Call task to do fill in memory with default fixed value
+    mem_wr_data = 20;
+    mem_wr_addr= 0;
+    mem_wr_strb = 1;
+    backdoor_mem_write(mem_wr_addr, mem_wr_data, mem_wr_strb); //Call task to do back doore memory wirte
+    mem_rd_addr =0;
+    backdoor_mem_read(mem_rd_addr, mem_rd_data);   // Call task to do back door memory read
+    user_gen_wready();     // Call task to generate wready 
   end
 
   /*************************************************************************************************
@@ -69,6 +102,8 @@ module axi_vip_0_mem_stimulus(
   * set high time
   * agent's write driver send_wready out
   * ready generation policy are listed below:
+  *  XIL_AXI_READY_GEN_NO_BACKPRESSURE     - Ready stays asserted and will not change. The driver
+                                             will still check for policy changes.
   *   XIL_AXI_READY_GEN_SINGLE             - Ready stays 0 for low_time clock cycles and then
                                              dirves 1 until one ready/valid handshake occurs,
                                              the policy repeats until the channel is given
@@ -109,52 +144,58 @@ module axi_vip_0_mem_stimulus(
 
    
   /*************************************************************************************************
-  * Task backdoor_mem_write shows how user can do backdoor write to memory model
-  * Declare default fill in value  mem_fill_payload according to DATA WIDTH
-  * Declare backdoor memory write address
-  * Declare backdoor memory write payload according to DATA WIDTH
-  * Declare backdoor memory write strobe
-  * Delcare Address offset
-  * Set default memory fill policy to be fixed
-  * Randmoize memory fill value 
-  * Set default memory value 
-  * Randomize memory write address
-  * Randomize memory write payload
-  * Randomize memory write strobe
-  * Calculate address offset
-  * Make lower bytes strobe are off when address is not aligned address
-  * Write data to memory model  
+  *  Task set_mem_default_value_fixed is to first fill in memory with policy
+  *   XIL_AXI_MEMORY_FILL_FIXED, then it will fill in default memory value with
+  *   input bit[DATA_WIDTH-1:0] fill_payload
+  *   Note: user has to make sure that fill_payload is DATA_WIDTH wide bit to match
+  *   memory model width. 
   *************************************************************************************************/
-
-  task backdoor_mem_write();
-    bit[32-1:0]              mem_fill_payload;
-    bit[32-1:0]             mem_wr_addr;
-    bit[32-1:0]              write_data;
-    bit[(32/8)-1:0]          write_strb;
-    xil_axi_ulong                           addr_offset;
-
+  task set_mem_default_value_fixed(input bit [32-1:0] fill_payload);
     agent.mem_model.set_memory_fill_policy(XIL_AXI_MEMORY_FILL_FIXED);
-    MEM_FILL_PAYLOAD_FAIL: assert(std::randomize(mem_fill_payload));
-    agent.mem_model.set_default_memory_value(mem_fill_payload);
-    WRITE_ADDR_FAIL: assert(std::randomize(mem_wr_addr));
-    WRITE_DATA_FAIL: assert(std::randomize(write_data)); 
-    WRITE_STRB_FAIL: assert(std::randomize(write_strb));
-    addr_offset = mem_wr_addr & ((1 << ($clog2(32/8)))-1);
-    write_strb = (write_strb <<addr_offset);
-    agent.mem_model.backdoor_memory_write(mem_wr_addr, write_data, write_strb);
+    agent.mem_model.set_default_memory_value(fill_payload);
+  endtask
+
+  /*************************************************************************************************
+  * Task set_mem_default_value_rand is to fill in memory with policy
+  * XIL_AXI_MEMORY_FILL_RADNOM, default memory value will be randomized generated
+  * when the address is being accessed 
+  *************************************************************************************************/
+  task set_mem_default_value_rand();
+    agent.mem_model.set_memory_fill_policy(XIL_AXI_MEMORY_FILL_RANDOM);
+  endtask
+
+  /*************************************************************************************************
+  * Task backdoor_mem_write shows how to write to some address of memory with data and strobe 
+  * information.
+  * User has to make sure that the inputs to this task has to follow below rules to match
+  * memory width, also user has to make sure that strobe bits can not be asserted on if lower 
+  * than the address offset.
+  * Address offset calculation is: address offset = address &((1 << (log2(DATA_WIDTH/8)) -1))
+  *  input xil_axi_ulong                         addr, 
+  *  input bit [DATA_WIDTH-1:0]                  wr_data
+  *  input bit [(DATA_WIDTH/8)-1:0]              wr_strb 
+  *************************************************************************************************/
+  task backdoor_mem_write(
+    input xil_axi_ulong                         addr, 
+    input bit [32-1:0]           wr_data,
+    input bit [(32/8)-1:0]       wr_strb ={(32/8){1'b1}}
+  );
+    agent.mem_model.backdoor_memory_write(addr, wr_data, wr_strb);
+
   endtask
 
   /*************************************************************************************************
   * Task backdoor_mem_read shows how user can do backdoor read data from memory model
-  * Declare backdoor memory read address
-  * Declare backdoor memory read data according to DATA WIDTH
-  * Randomize memory read address
-  * Read data from memory model 
+  * it has one input which is backdoor memory read address and one output which is read out data
+  * User has to note to declare memory read address and data like below
+  * input xil_axi_ulong mem_rd_addr,
+  * output bit [DATA_WIDTH-1:0] mem_rd_data 
   *************************************************************************************************/
-  task backdoor_mem_read();
-    bit[32-1:0]             mem_rd_addr;
-    bit[32-1:0]              read_data;
-    READ_ADDR_FAIL: assert(std::randomize(mem_rd_addr));
-    read_data= agent.mem_model.backdoor_memory_read(mem_rd_addr);
+  task backdoor_mem_read(
+    input xil_axi_ulong mem_rd_addr,
+    output bit [32-1:0] mem_rd_data
+   );
+    mem_rd_data= agent.mem_model.backdoor_memory_read(mem_rd_addr);
+
   endtask
 endmodule
