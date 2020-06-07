@@ -16,7 +16,7 @@
 * siganl,if user wants to create his own ready signal, please refer task user_gen_wready. 
 ***************************************************************************************************/
 import axi_vip_pkg::*;
-import ex_sim_axi_vip_slv_0_pkg::*;
+import axi_vip_slv_pkg::*;
 
 module axi_vip_0_slv_stimulus(
   );
@@ -36,7 +36,7 @@ module axi_vip_0_slv_stimulus(
   * Then click CONFIG under Properties window and Component_Name will be shown
   * More details please refer PG267 for more details
   *************************************************************************************************/
-  ex_sim_axi_vip_slv_0_slv_t              agent;
+  axi_vip_slv_slv_t              agent;
 
   initial begin
     /***********************************************************************************************    * Before agent is newed, user has to run simulation with an empty testbench to find the

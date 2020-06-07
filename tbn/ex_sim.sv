@@ -104,7 +104,7 @@ axi_if #(
   .ARESETn (aresetn)
 );
 
-ex_sim_axi_vip_mst_0 #(
+axi_vip_mst #(
   .PROTOCOL        (C_AXI.PROTOCOL       ),
 //.INTERFACE_MODE  (C_AXI.INTERFACE_MODE ),
   .ADDR_WIDTH      (C_AXI.ADDR_WIDTH     ),
@@ -132,7 +132,7 @@ ex_sim_axi_vip_mst_0 #(
   .m_axi (axi_mst)
 );
 
-ex_sim_axi_vip_passthrough_0 #(
+axi_vip_thr #(
   .PROTOCOL        (C_AXI.PROTOCOL       ),
 //.INTERFACE_MODE  (C_AXI.INTERFACE_MODE ),
   .ADDR_WIDTH      (C_AXI.ADDR_WIDTH     ),
@@ -156,12 +156,12 @@ ex_sim_axi_vip_passthrough_0 #(
   .HAS_BRESP       (C_AXI.HAS_BRESP      ),
   .HAS_RRESP       (C_AXI.HAS_RRESP      ),
   .HAS_ARESETN     (C_AXI.HAS_ARESETN    )
-) axi_vip_passthrough (
+) axi_vip_thr (
   .s_axi (axi_mst),
   .m_axi (axi_slv)
 );
 
-ex_sim_axi_vip_slv_0 #(
+axi_vip_slv #(
   .PROTOCOL        (C_AXI.PROTOCOL       ),
 //.INTERFACE_MODE  (C_AXI.INTERFACE_MODE ),
   .ADDR_WIDTH      (C_AXI.ADDR_WIDTH     ),

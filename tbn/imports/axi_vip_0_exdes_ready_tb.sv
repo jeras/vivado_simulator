@@ -19,9 +19,9 @@
 `timescale 1ns / 1ps
 // import package 
 import axi_vip_pkg::*;
-import ex_sim_axi_vip_mst_0_pkg::*;
-import ex_sim_axi_vip_slv_0_pkg::*;
-import ex_sim_axi_vip_passthrough_0_pkg::*;
+import axi_vip_mst_pkg::*;
+import axi_vip_slv_pkg::*;
+import axi_vip_thr_pkg::*;
 
 module axi_vip_0_exdes_ready_tb(
   );
@@ -99,9 +99,9 @@ module axi_vip_0_exdes_ready_tb(
   * then click CONFIG under Properties window and Component_Name will be shown
   * more details please refer PG267 for more details
   ***********************************************************************************************/
-  ex_sim_axi_vip_mst_0_mst_t                                      mst_agent;
-  ex_sim_axi_vip_slv_0_slv_mem_t                                  mem_agent;
-  ex_sim_axi_vip_passthrough_0_passthrough_mem_t                  passthrough_mem_agent;
+  axi_vip_mst_mst_t                                      mst_agent;
+  axi_vip_slv_slv_mem_t                                  mem_agent;
+  axi_vip_thr_passthrough_mem_t                  passthrough_mem_agent;
 
   
      
@@ -136,7 +136,7 @@ module axi_vip_0_exdes_ready_tb(
     ***********************************************************************************************/
     mst_agent = new("master vip agent",DUT.axi_vip_mst.inst.IF);
     mem_agent = new("slave vip agent with memory model",DUT.axi_vip_slv.inst.IF);
-    passthrough_mem_agent = new("passthrough vip agent with memory model",DUT.axi_vip_passthrough.inst.IF);
+    passthrough_mem_agent = new("passthrough vip agent with memory model",DUT.axi_vip_thr.inst.IF);
     $timeformat (-12, 1, " ps", 1);
     /*************************************************************************************************  
     * set tag for agents for easy debug,if not set here, it will be hard to tell which driver is filing 
@@ -371,7 +371,7 @@ module axi_vip_0_exdes_ready_tb(
     *  2.4 generate an no backpressure rready signal  
     *  2.5 generate an no backpressure bready signal  
     ***********************************************************************************************/
-    axi_vip_0_exdes_ready_tb.DUT.axi_vip_passthrough.inst.set_master_mode();
+    axi_vip_0_exdes_ready_tb.DUT.axi_vip_thr.inst.set_master_mode();
     exdes_state = EXDES_PASSTHROUGH_MASTER;
     passthrough_mem_agent.set_agent_tag("Passthrough VIP in Master mode");
     passthrough_mem_agent.start_master();

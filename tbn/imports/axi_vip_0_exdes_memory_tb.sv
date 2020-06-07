@@ -25,9 +25,9 @@
 `timescale 1ns / 1ps
 // import package 
 import axi_vip_pkg::*;
-import ex_sim_axi_vip_mst_0_pkg::*;
-import ex_sim_axi_vip_slv_0_pkg::*;
-import ex_sim_axi_vip_passthrough_0_pkg::*;
+import axi_vip_mst_pkg::*;
+import axi_vip_slv_pkg::*;
+import axi_vip_thr_pkg::*;
 
 module axi_vip_0_exdes_tb(
   );
@@ -64,9 +64,9 @@ module axi_vip_0_exdes_tb(
   * then click CONFIG under Properties window and Component_Name will be shown
   * more details please refer PG267 for more details
   ***********************************************************************************************/
-  ex_sim_axi_vip_mst_0_mst_t                                mst_agent;
-  ex_sim_axi_vip_slv_0_slv_mem_t                            slv_mem_agent;
-  ex_sim_axi_vip_passthrough_0_passthrough_t                passthrough_agent;
+  axi_vip_mst_mst_t                                mst_agent;
+  axi_vip_slv_slv_mem_t                            slv_mem_agent;
+  axi_vip_thr_passthrough_t                passthrough_agent;
 
   xil_axi_uint                                              addr_rand;
   /************************************************************************************************
@@ -120,7 +120,7 @@ module axi_vip_0_exdes_tb(
 
     mst_agent = new("master vip agent",DUT.axi_vip_mst.inst.IF);
     slv_mem_agent = new("slave vip agent",DUT.axi_vip_slv.inst.IF);
-    passthrough_agent = new("passthrough vip agent",DUT.axi_vip_passthrough.inst.IF);
+    passthrough_agent = new("passthrough vip agent",DUT.axi_vip_thr.inst.IF);
     $timeformat (-12, 1, " ps", 1);
 
     /***********************************************************************************************

@@ -26,7 +26,7 @@
 ***************************************************************************************************/
 
 import axi_vip_pkg::*;
-import ex_sim_axi_vip_mst_0_pkg::*;
+import axi_vip_mst_pkg::*;
 
 module axi_vip_0_mst_stimulus();
   
@@ -37,7 +37,7 @@ module axi_vip_0_mst_stimulus();
   * More details please refer PG267 section about "Useful Coding Guidelines and Examples"
   * for more details.
   *************************************************************************************************/
-  ex_sim_axi_vip_mst_0_mst_t                               agent;
+  axi_vip_mst_mst_t                               agent;
 
   /*************************************************************************************************
   * Declare variables which will be used in API and parital randomization for transaction generation

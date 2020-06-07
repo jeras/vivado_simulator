@@ -19,7 +19,7 @@
 
 
 import axi_vip_pkg::*;
-import ex_sim_axi_vip_slv_0_pkg::*;
+import axi_vip_slv_pkg::*;
 
 module axi_vip_0_mem_stimulus(
   );
@@ -30,7 +30,7 @@ module axi_vip_0_mem_stimulus(
   * then click CONFIG under Properties window and Component_Name will be shown
   * more details please refer PG267 for more details
   *************************************************************************************************/
-  ex_sim_axi_vip_slv_0_slv_mem_t                          agent;
+  axi_vip_slv_slv_mem_t                          agent;
   
   /************************************************************************************************
   * Declare payload, address, data and strobe for back door memory write/read

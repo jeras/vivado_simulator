@@ -51,9 +51,9 @@
 `timescale 1ns / 1ps
 // import package 
 import axi_vip_pkg::*;
-import ex_sim_axi_vip_mst_0_pkg::*;
-import ex_sim_axi_vip_slv_0_pkg::*;
-import ex_sim_axi_vip_passthrough_0_pkg::*;
+import axi_vip_mst_pkg::*;
+import axi_vip_slv_pkg::*;
+import axi_vip_thr_pkg::*;
 
 module axi_vip_0_exdes_tb(
   );
@@ -219,9 +219,9 @@ module axi_vip_0_exdes_tb(
   // then click CONFIG under Properties window and Component_Name will be shown
   // more details please refer PG267 for more details
   //----------------------------------------------------------------------------------------------
-  ex_sim_axi_vip_mst_0_mst_t                              mst_agent;
-  ex_sim_axi_vip_slv_0_slv_t                              slv_agent;
-  ex_sim_axi_vip_passthrough_0_passthrough_t              passthrough_agent;
+  axi_vip_mst_mst_t                              mst_agent;
+  axi_vip_slv_slv_t                              slv_agent;
+  axi_vip_thr_passthrough_t              passthrough_agent;
 
   
      
@@ -256,7 +256,7 @@ module axi_vip_0_exdes_tb(
     //----------------------------------------------------------------------------------------------
     mst_agent = new("master vip agent",DUT.axi_vip_mst.inst.IF);
     slv_agent = new("slave vip agent",DUT.axi_vip_slv.inst.IF);
-    passthrough_agent = new("passthrough vip agent",DUT.axi_vip_passthrough.inst.IF);
+    passthrough_agent = new("passthrough vip agent",DUT.axi_vip_thr.inst.IF);
     $timeformat (-12, 1, " ps", 1);
     //----------------------------------------------------------------------------------------------
     // set tag for agents for easy debug,if not set here, it will be hard to tell which driver is filing 
@@ -597,7 +597,7 @@ module axi_vip_0_exdes_tb(
     //----------------------------------------------------------------------------------------------
     // switch passthrough VIP inst to run time master mode by call task set_master_mode
     //----------------------------------------------------------------------------------------------
-    axi_vip_0_exdes_tb.DUT.axi_vip_passthrough.inst.set_master_mode();
+    axi_vip_0_exdes_tb.DUT.axi_vip_thr.inst.set_master_mode();
     exdes_state = EXDES_PASSTHROUGH_MASTER;
     passthrough_agent.set_agent_tag("Passthrough VIP in Master mode");
     passthrough_agent.start_master();
@@ -678,7 +678,7 @@ module axi_vip_0_exdes_tb(
     // switch passthrough VIP inst to run time slave mode by call task set_slave_mode
     //----------------------------------------------------------------------------------------------
     #1ns;
-    axi_vip_0_exdes_tb.DUT.axi_vip_passthrough.inst.set_slave_mode();
+    axi_vip_0_exdes_tb.DUT.axi_vip_thr.inst.set_slave_mode();
     exdes_state = EXDES_PASSTHROUGH_SLAVE;
     passthrough_agent.set_agent_tag("Passthrough VIP in Slave mode");
     passthrough_agent.stop_master();

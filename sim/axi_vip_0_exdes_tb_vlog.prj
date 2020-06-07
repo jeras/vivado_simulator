@@ -5,12 +5,12 @@ sv xil_defaultlib \
 --include "../vivado/data/xilinx_vip/include" \
 "../rtl/axi_if_pkg.sv" \
 "../rtl/axi_if.sv" \
-"../tbn/ex_sim_axi_vip_mst_0_pkg.sv" \
-"../tbn/ex_sim_axi_vip_mst_0.sv" \
-"../tbn/ex_sim_axi_vip_passthrough_0_pkg.sv" \
-"../tbn/ex_sim_axi_vip_passthrough_0.sv" \
-"../tbn/ex_sim_axi_vip_slv_0_pkg.sv" \
-"../tbn/ex_sim_axi_vip_slv_0.sv" \
+"../tbn/axi_vip_mst_pkg.sv" \
+"../tbn/axi_vip_mst.sv" \
+"../tbn/axi_vip_thr_pkg.sv" \
+"../tbn/axi_vip_thr.sv" \
+"../tbn/axi_vip_slv_pkg.sv" \
+"../tbn/axi_vip_slv.sv" \
 "../tbn/ex_sim.sv" \
 "../tbn/imports/axi_vip_0_exdes_tb.sv" \
 

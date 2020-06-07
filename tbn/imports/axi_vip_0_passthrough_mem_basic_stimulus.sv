@@ -21,7 +21,7 @@
 ***************************************************************************************************/
 
 import axi_vip_pkg::*;
-import ex_sim_axi_vip_passthrough_0_pkg::*;
+import axi_vip_thr_pkg::*;
 
 module axi_vip_0_passthrough_mem_basic_stimulus(
   );
@@ -32,7 +32,7 @@ module axi_vip_0_passthrough_mem_basic_stimulus(
   * Then click CONFIG under Properties window and Component_Name will be shown
   * More details please refer PG267 for more details
   *************************************************************************************************/
-  ex_sim_axi_vip_passthrough_0_passthrough_mem_t          agent;
+  axi_vip_thr_passthrough_mem_t          agent;
 
   initial begin
     /***********************************************************************************************
@@ -41,13 +41,13 @@ module axi_vip_0_passthrough_mem_basic_stimulus(
     * "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.axi_vip_mst.inst" will be printed 
     * out. Pass this path to the new function. 
     ***********************************************************************************************/
-    agent = new("passthrough vip mem agent",DUT.axi_vip_passthrough.inst.IF);
+    agent = new("passthrough vip mem agent",DUT.axi_vip_thr.inst.IF);
 
     /***********************************************************************************************
     *  User has call API from Passthrough VIP's top to switch passthrough VIP into run time slave 
     *  mode. The hierarchy path is the same as shown in new 
     ***********************************************************************************************/
-    DUT.axi_vip_passthrough.inst.set_slave_mode(); 
+    DUT.axi_vip_thr.inst.set_slave_mode(); 
 
     /***********************************************************************************************
     *  User has call API from Passthrough VIP's agent to start slave

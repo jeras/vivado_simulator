@@ -23,7 +23,7 @@
 ***************************************************************************************************/
 
 import axi_vip_pkg::*;
-import ex_sim_axi_vip_passthrough_0_pkg::*;
+import axi_vip_thr_pkg::*;
 
 module axi_vip_0_passthrough_mem_stimulus(
   );
@@ -33,7 +33,7 @@ module axi_vip_0_passthrough_mem_stimulus(
   * Then click CONFIG under Properties window and Component_Name will be shown
   * More details please refer PG267 for more details
   *************************************************************************************************/
-  ex_sim_axi_vip_passthrough_0_passthrough_mem_t          agent;
+  axi_vip_thr_passthrough_mem_t          agent;
  
   /************************************************************************************************
   * Declare payload, address, data and strobe for back door memory write/read
@@ -60,7 +60,7 @@ module axi_vip_0_passthrough_mem_stimulus(
     * "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.axi_vip_mst.inst" will be printed 
     * out. Pass this path to the new function. 
     ***********************************************************************************************/
-    agent = new("passthrough vip mem agent",DUT.axi_vip_passthrough.inst.IF);
+    agent = new("passthrough vip mem agent",DUT.axi_vip_thr.inst.IF);
     
     /***********************************************************************************************    * Set tag for agents for easy debug especially multiple agents are called in one testbench
     ***********************************************************************************************/
@@ -73,7 +73,7 @@ module axi_vip_0_passthrough_mem_stimulus(
     ***********************************************************************************************/
     agent.set_verbosity(0);
 
-    DUT.axi_vip_passthrough.inst.set_slave_mode(); // Switch Passthrough VIP into run
+    DUT.axi_vip_thr.inst.set_slave_mode(); // Switch Passthrough VIP into run
                                                              // time slave mode
     agent.start_slave();                                     //Agent starts to run
    

@@ -21,4 +21,5 @@ xsim ${MOD}_behav \
 -key {Behavioral:sim_all_config:Functional:${MOD}} \
 -tclbatch {${MOD}.tcl} \
 -protoinst "ex_sim.protoinst" \
--log {simulate.log} -gui
+-log {simulate.log} \
+#-gui

@@ -23,7 +23,7 @@
 ***************************************************************************************************/
 
 import axi_vip_pkg::*;
-import ex_sim_axi_vip_passthrough_0_pkg::*;
+import axi_vip_thr_pkg::*;
 
 module axi_vip_0_passthrough_slv_stimulus(
   );
@@ -44,7 +44,7 @@ module axi_vip_0_passthrough_slv_stimulus(
   * More details please refer PG267 for more details
   *************************************************************************************************/
 
-  ex_sim_axi_vip_passthrough_0_passthrough_t              agent;
+  axi_vip_thr_passthrough_t              agent;
 
   initial begin
     /***********************************************************************************************    * Before agent is newed, user has to run simulation with an empty testbench to find the
@@ -52,7 +52,7 @@ module axi_vip_0_passthrough_slv_stimulus(
     * "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.axi_vip_mst.inst" will be printed 
     * out. Pass this path to the new function. 
     ***********************************************************************************************/
-    agent = new("passthrough vip agent",DUT.axi_vip_passthrough.inst.IF);
+    agent = new("passthrough vip agent",DUT.axi_vip_thr.inst.IF);
 
     /***********************************************************************************************    * Set tag for agents for easy debug especially multiple agents are called in one testbench
     ***********************************************************************************************/
@@ -65,7 +65,7 @@ module axi_vip_0_passthrough_slv_stimulus(
     ***********************************************************************************************/
     agent.set_verbosity(0);
 
-    DUT.axi_vip_passthrough.inst.set_slave_mode();  //Switch passthrough VIP into 
+    DUT.axi_vip_thr.inst.set_slave_mode();  //Switch passthrough VIP into 
                                                               // run time slave mode
     agent.start_slave();                                     //agent starts to run
 
