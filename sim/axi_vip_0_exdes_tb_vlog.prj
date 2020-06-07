@@ -1,8 +1,8 @@
 # compile Verilog/SystemVerilog design source files
 sv xil_defaultlib \
 -i "../tbn/imports" \
---include "vivado/data/ip/xilinx/axi_infrastructure_v1_1/hdl/" \
---include "vivado/data/xilinx_vip/include" \
+--include "../vivado/data/ip/xilinx/axi_infrastructure_v1_1/hdl/" \
+--include "../vivado/data/xilinx_vip/include" \
 "../rtl/axi_if_pkg.sv" \
 "../rtl/axi_if.sv" \
 "../tbn/ex_sim_axi_vip_mst_0_pkg.sv" \
@@ -15,7 +15,7 @@ sv xil_defaultlib \
 "../tbn/imports/axi_vip_0_exdes_tb.sv" \
 
 # compile glbl module
-verilog xil_defaultlib "vivado/data/verilog/src/glbl.v"
+verilog xil_defaultlib "../vivado/data/verilog/src/glbl.v"
 
 # Do not sort compile order
 nosort
