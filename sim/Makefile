@@ -27,6 +27,8 @@ RTL = $(RTL_PKG) $(RTL_DIF)
 TBN_PKG =$(wildcard $(PATH_TBN)/*_pkg.sv)
 TBN_SRC =$(wildcard $(PATH_TBN)/*.sv)
 TBN_SRC+=$(wildcard $(PATH_TBN)/*.v)
+TBN_SRC+=$(wildcard $(PATH_TBN)/imports/*.sv)
+TBN_SRC+=$(wildcard $(PATH_TBN)/imports/*.v)
 TBN_DIF =$(filter-out $(TBN_PKG),$(TBN_SRC))
 TBN = $(TBN_PKG) $(TBN_DIF)
 TBN+= $(PATH_LIB)/glbl.v
@@ -34,8 +36,8 @@ TBN+= $(PATH_LIB)/glbl.v
 SRC = $(LIB) $(RTL) $(TBN)
 
 #MOD ?= axi4stream_vip_0_exdes_tb
-#MOD = axi_vip_0_exdes_tb
-MOD = axi_vip_0_exdes_adv_mst_active__pt_passive__slv_comb
+MOD = axi_vip_0_exdes
+#MOD = axi_vip_0_exdes_adv_mst_active__pt_passive__slv_comb
 
 all: simulate
 
@@ -85,7 +87,7 @@ OPT_ELABORATE = $(OPT_ELABORATE_LIB)
 elaborate: compile
 #%_tb: elaborate
 	xelab -m64 --debug typical --relax $(OPT_ELABORATE) \
-	--snapshot $(MOD)_behav xil_defaultlib.$(MOD) xil_defaultlib.glbl -log elaborate.log
+	--snapshot $(MOD)_behav xil_defaultlib.$(MOD)_tb xil_defaultlib.glbl -log elaborate.log
 #	--snapshot $@ xil_defaultlib.$@
 
 simulate: elaborate
