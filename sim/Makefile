@@ -64,7 +64,8 @@ OPT_COMPILE = $(OPT_COMPILE_LIB) $(OPT_COMPILE_INC)
 
 compile: $(SRC)
 #	$(foreach file,$(SRC),xvlog                             --sv --work xil_defaultlib $(file);)
-	$(foreach file,$(SRC),xvlog -m64 --relax $(OPT_COMPILE) --sv --work xil_defaultlib $(file);)
+#	$(foreach file,$(SRC),xvlog -m64 --relax $(OPT_COMPILE) --sv --work xil_defaultlib $(file);)
+	xvlog --incr --relax -L axi_vip_v1_1_6 -L xilinx_vip -prj axi_vip_0_exdes_tb_vlog.prj
 
 
 OPT_ELABORATE_LIB =-L smartconnect_v1_0
@@ -86,11 +87,28 @@ OPT_ELABORATE = $(OPT_ELABORATE_LIB)
 
 elaborate: compile
 #%_tb: elaborate
-	xelab -m64 --debug typical --relax $(OPT_ELABORATE) \
-	--snapshot $(MOD)_behav xil_defaultlib.$(MOD)_tb xil_defaultlib.glbl -log elaborate.log
+#	xelab -m64 --debug typical --relax $(OPT_ELABORATE) \
+#	--snapshot $(MOD)_behav xil_defaultlib.$(MOD)_tb xil_defaultlib.glbl -log elaborate.log
 #	--snapshot $@ xil_defaultlib.$@
+	xelab -wto b3ce32971b074427ad53c722ac80f042 --incr --debug typical --relax --mt 8 \
+	-L xil_defaultlib \
+       	-L axi_infrastructure_v1_1_0 \
+       	-L axi_vip_v1_1_6 \
+       	-L xilinx_vip \
+       	-L unisims_ver \
+       	-L unimacro_ver \
+       	-L secureip \
+       	-L xpm \
+       	--snapshot axi_vip_0_exdes_tb_behav xil_defaultlib.axi_vip_0_exdes_tb xil_defaultlib.glbl \
+	-log elaborate.log
+
 
 simulate: elaborate
 #	xsim $@ -gui -wdb simulate_xsim.wdb
 #	xsim $(MOD)_behav -tclbatch $(MOD)_tb.tcl -log simulate.log
-	xsim $(MOD)_behav -tclbatch $(MOD)_tb.tcl -gui -view $(MOD)_behav.wcfg -log simulate.log
+#	xsim $(MOD)_behav -tclbatch $(MOD)_tb.tcl -gui -view $(MOD)_behav.wcfg -log simulate.log
+	xsim axi_vip_0_exdes_tb_behav \
+	-key {Behavioral:sim_all_config:Functional:axi_vip_0_exdes_tb} \
+	-tclbatch {axi_vip_0_exdes_tb.tcl} \
+	-protoinst "protoinst_files/ex_sim.protoinst" \
+	-log {simulate.log}
