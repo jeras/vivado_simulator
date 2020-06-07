@@ -1,4 +1,4 @@
-MOD=axi_vip_0_exdes_tb
+MOD=axisim_tb
 
 # compile sources
 xvlog --incr --relax -L axi_vip_v1_1_7 -L xilinx_vip -prj ${MOD}_vlog.prj
@@ -20,6 +20,6 @@ xelab -wto b3ce32971b074427ad53c722ac80f042 --incr --debug typical --relax --mt 
 xsim ${MOD}_behav \
 -key {Behavioral:sim_all_config:Functional:${MOD}} \
 -tclbatch {${MOD}.tcl} \
--protoinst "ex_sim.protoinst" \
+-protoinst "axi_sim.protoinst" \
 -log {simulate.log} \
 #-gui

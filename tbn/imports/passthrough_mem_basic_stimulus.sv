@@ -23,7 +23,7 @@
 import axi_vip_pkg::*;
 import axi_vip_thr_pkg::*;
 
-module axi_vip_0_passthrough_mem_basic_stimulus(
+module passthrough_mem_basic_stimulus(
   );
  
   /*************************************************************************************************
@@ -38,7 +38,7 @@ module axi_vip_0_passthrough_mem_basic_stimulus(
     /***********************************************************************************************
     * Before agent is newed, user has to run simulation with an empty testbench to find the
     * hierarchy path of the AXI VIP's instance.Message like
-    * "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.axi_vip_mst.inst" will be printed 
+    * "Xilinx AXI VIP Found at Path: my_ip_axisim_tb.DUT.axi_vip_mst.inst" will be printed 
     * out. Pass this path to the new function. 
     ***********************************************************************************************/
     agent = new("passthrough vip mem agent",DUT.axi_vip_thr.inst.IF);

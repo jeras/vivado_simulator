@@ -3,15 +3,15 @@
 //Tool Version: Vivado v.2019.2 (lin64) Build 2708876 Wed Nov  6 21:39:14 MST 2019
 //Date        : Fri Jun  5 21:06:17 2020
 //Host        : Agrajag running 64-bit Ubuntu 18.04.4 LTS
-//Command     : generate_target ex_sim.bd
-//Design      : ex_sim
+//Command     : generate_target axi_sim.bd
+//Design      : axi_sim
 //Purpose     : IP block netlist
 //--------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
 import axi_if_pkg::*;
 
-module ex_sim (
+module axi_sim (
   input  logic aclk,
   input  logic aresetn
 );
@@ -189,4 +189,4 @@ axi_vip_slv #(
   .s_axi (axi_slv)
 );
 
-endmodule: ex_sim
+endmodule: axi_sim

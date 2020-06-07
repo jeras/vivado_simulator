@@ -10,16 +10,16 @@
 
 import axi_vip_pkg::*;
 
-module axi_vip_0_exdes_generic(
+module axisim_generic(
   );
 
   typedef enum {
     EXDES_PASSTHROUGH,
     EXDES_PASSTHROUGH_MASTER,
     EXDES_PASSTHROUGH_SLAVE
-  } exdes_passthrough_t;
+  } axisim_passthrough_t;
 
-  exdes_passthrough_t                     exdes_state = EXDES_PASSTHROUGH;
+  axisim_passthrough_t                     axisim_state = EXDES_PASSTHROUGH;
 
   // Error count to check how many comparison failed
   xil_axi_uint                            error_cnt = 0; 

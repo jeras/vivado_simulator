@@ -1,45 +1,37 @@
 
-/***************************************************************************************************
-* Description: 
-* This file contains examples showing how user can generate simple write and/or read transaction 
-* According to VIP's WRITE_READ_MODE. user will see different examples.
-* WRITE_ONLY - simple write transaction
-* READ_ONLY  - simple read transaction
-* READ_WRITE - both simple write and read transaction
 
-*  For Master VIP to work correctly, user environment MUST have to do the following lists of item
-*  and follow the same order as shown here.  Item 1 to 5 can be copied into a user testbench and
-*  care of the ordering must be taken into account.    
-*    1. import two packages.
-*         import axi_vip_pkg::*; 
+/**************************************************************************************************** Description:
+* Considering different user cases, Passthrough VIP can be switched into either run time master
+* mode or run time slave mode. When it is in run time slave mode, depends on situations, user may
+* want to build their own memory model or using existing memory model. Passthrough VIP has two
+* agents: passthrough_agent and passthrough_mem_agent to suit user needs.Passthrough_agent doesn't
+* have memory model and user can build their own memory model and fill in write transaction and/or
+* read transaction responses in their own way.Passthrough_mem_agent has memory model which user can
+* use it directly.
+* This file contains example on how Passthrough VIP in run time master mode  create a simple write
+* and/or read transaction 
+* For Passthrough VIP to work correctly, user environment MUST have the lists of item below and
+* follow this order.
+*    1. import two packages.(this information also shows at the xgui of the VIP)
+*         import axi_vip_pkg::* 
 *         import <component_name>_pkg::*;
-*    2. delcare <component_name>_mst_t agent
+*    2. delcare <component_name>_passthrough_t agent
 *    3. new agent (passing instance IF correctly)
-*    4. start_master
-*    5. generate transaction/
-* More details about generating transaction please refer tasks below.
-*
-* In this file,it shows how to generate a write/read transaction in three ways(fully randomization,
-* partial randomization and API), it then shows how to get read data back from driver,how
-* generate write in data and then read it back.
-*  
+*    4. switch passthrough VIP into run time master mode
+*    5. start_master
+*    6. create_transaction
+*    7. Fill in transaction( two methods. randomization and API)
+*    8. send transaction
+* As for ready generation, if user enviroment doesn't do anything, it will randomly generate ready
+* siganl, if user wants to create his own ready signal, please refer task user_gen_rready 
 ***************************************************************************************************/
-
 import axi_vip_pkg::*;
-import axi_vip_mst_pkg::*;
+import axi_vip_thr_pkg::*;
 
-module axi_vip_0_mst_stimulus();
-  
-  /*************************************************************************************************
-  * <component_name>_mst_t for master agent
-  * <component_name> can be easily found in vivado bd design: click on the instance, 
-  * Then click CONFIG under Properties window and Component_Name will be shown
-  * More details please refer PG267 section about "Useful Coding Guidelines and Examples"
-  * for more details.
-  *************************************************************************************************/
-  axi_vip_mst_mst_t                               agent;
 
-  /*************************************************************************************************
+module passthrough_mst_stimulus();
+
+   /*************************************************************************************************
   * Declare variables which will be used in API and parital randomization for transaction generation
   * and data read back from driver.
   *************************************************************************************************/
@@ -69,19 +61,43 @@ module axi_vip_0_mst_stimulus();
   xil_axi_data_beat                                        Rdatabeat[];       // Read data beats
   bit[8*4096-1:0]                                          Wdatablock;        // Write data block
   xil_axi_data_beat                                        Wdatabeat[];       // Write data beats
- 
+
+  /*************************************************************************************************
+  * Declare <component_name>_passthrough_t for passthrough agent
+  * "Component_name can be easily found in vivado bd design: click on the instance, 
+  * Then click CONFIG under Properties window and Component_Name will be shown
+  * More details please refer PG267 for more details
+  *************************************************************************************************/
+  axi_vip_thr_passthrough_t              agent;
+
   initial begin
-    /***********************************************************************************************
-    * Before agent is newed, user has to run simulation with an empty testbench to find the hierarchy
-    * path of the AXI VIP's instance.Message like
-    * "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.axi_vip_mst.inst" will be printed 
+   /***********************************************************************************************
+    * Before agent is newed, user has to run simulation with an empty testbench to find the
+    * hierarchy path of the AXI VIP's instance.Message like
+    * "Xilinx AXI VIP Found at Path: my_ip_axisim_tb.DUT.axi_vip_mst.inst" will be printed 
     * out. Pass this path to the new function. 
     ***********************************************************************************************/
-    agent = new("master vip agent",DUT.axi_vip_mst.inst.IF);
-    agent.start_master();               // agent start to run
+    agent = new("passthrough vip agent",DUT.axi_vip_thr.inst.IF);
+   
+    /***********************************************************************************************   
+    * Set tag for agents for easy debug especially multiple agents are called in one testbench
+    ***********************************************************************************************/
+    agent.set_agent_tag("My Passthrough VIP");
+
+    /*********************************************************************************************** 
+    * Set verbosity of agent - default is no print out 
+    * Verbosity level which specifies how much debug information to produce
+    *    0       - No information will be printed out.
+    *   400      - All information will be printed out
+    ***********************************************************************************************/
+    agent.set_verbosity(0);
+
+    DUT.axi_vip_thr.inst.set_master_mode();  //  Switch passthrough agent 
+                                                               //into run time master mode
+    agent.start_master();                                     //agent starts to run
 
     // Parallel write/read transaction generation 
-    fork                               // Fork process of write/read transaction generation                    
+    fork                                
   
       begin  
         // single write transaction with fully randomization
@@ -133,6 +149,7 @@ module axi_vip_0_mst_stimulus();
                                      .size(mtestRDataSize),
                                      .burst(mtestRBurstType)
                                      );
+
         //multiple read transaction with the same inline randomization 
         multiple_read_transaction_partial_rand( .num_xfer(2),
                                                 .start_addr(mtestRADDR),
@@ -143,7 +160,7 @@ module axi_vip_0_mst_stimulus();
                                                 .no_xfer_delays(1)
                                                ); 
         //get read data back from driver
-        rd_trans = agent.rd_driver.create_transaction("read transaction with randomization for getting data back");
+        rd_trans = agent.mst_rd_driver.create_transaction("read transaction with randomization for getting data back");
         fill_transaction_with_fully_randomization(rd_trans);
         //get read data beat back from driver
         get_rd_data_beat_back(rd_trans,Rdatabeat);
@@ -152,7 +169,7 @@ module axi_vip_0_mst_stimulus();
       end  
     join
 
-    agent.wait_drivers_idle();           // Wait driver is idle 
+    agent.wait_mst_drivers_idle();           // Wait mst drivers are in idle 
    
  
     //Below shows write two transactions in and then read them back
@@ -171,7 +188,7 @@ module axi_vip_0_mst_stimulus();
                                      .no_xfer_delays(1)
                                     );  
 
-    agent.wait_drivers_idle();           // Wait driver is idle then stop the simulation
+    agent.wait_mst_drivers_idle();           // Wait mst drivers are in idle then stop the simulation
    
     if(generic_tb.error_cnt ==0) begin
       $display("EXAMPLE TEST DONE : Test Completed Successfully");
@@ -218,14 +235,15 @@ module axi_vip_0_mst_stimulus();
        end
   endtask : inline_randomize_transaction
 
+
   /************************************************************************************************
   * Task send_wait_rd is a task which set_driver_return_item_policy of the read transaction, 
   * send the transaction to the driver and wait till it is done
   *************************************************************************************************/
   task send_wait_rd(inout axi_transaction rd_trans);
     rd_trans.set_driver_return_item_policy(XIL_AXI_PAYLOAD_RETURN);
-    agent.rd_driver.send(rd_trans);
-    agent.rd_driver.wait_rsp(rd_trans);
+    agent.mst_rd_driver.send(rd_trans);
+    agent.mst_rd_driver.wait_rsp(rd_trans);
   endtask
 
   /************************************************************************************************
@@ -261,8 +279,8 @@ module axi_vip_0_mst_stimulus();
   *************************************************************************************************/
   task send_wait_wr(inout axi_transaction wr_trans);
     wr_trans.set_driver_return_item_policy(XIL_AXI_PAYLOAD_RETURN);
-    agent.wr_driver.send(wr_trans);
-    agent.wr_driver.wait_rsp(wr_trans);
+    agent.mst_wr_driver.send(wr_trans);
+    agent.mst_wr_driver.wait_rsp(wr_trans);
   endtask
 
   /************************************************************************************************
@@ -281,7 +299,7 @@ module axi_vip_0_mst_stimulus();
   endtask
 
   /************************************************************************************************
-  * Task get_wr_data_block_back is to get write data back from write driver with
+  *  Task get_wr_data_block_back is to get write data back from write driver with
   * data block format.
   *************************************************************************************************/
   task get_wr_data_block_back(inout axi_transaction wr_trans, 
@@ -322,7 +340,7 @@ module axi_vip_0_mst_stimulus();
                                 input bit [63:0]                 data =0
                                                 );
     axi_transaction                               wr_trans;
-    wr_trans = agent.wr_driver.create_transaction(name);
+    wr_trans = agent.mst_wr_driver.create_transaction(name);
     wr_trans.set_write_cmd(addr,burst,id,len,size);
     wr_trans.set_prot(prot);
     wr_trans.set_lock(lock);
@@ -330,7 +348,7 @@ module axi_vip_0_mst_stimulus();
     wr_trans.set_region(region);
     wr_trans.set_qos(qos);
     wr_trans.set_data_block(data);
-    agent.wr_driver.send(wr_trans);   
+    agent.mst_wr_driver.send(wr_trans);   
   endtask  : single_write_transaction_api
 
   /************************************************************************************************
@@ -357,14 +375,14 @@ module axi_vip_0_mst_stimulus();
                                     input xil_axi_data_beat          aruser =0
                                                 );
     axi_transaction                               rd_trans;
-    rd_trans = agent.rd_driver.create_transaction(name);
+    rd_trans = agent.mst_rd_driver.create_transaction(name);
     rd_trans.set_read_cmd(addr,burst,id,len,size);
     rd_trans.set_prot(prot);
     rd_trans.set_lock(lock);
     rd_trans.set_cache(cache);
     rd_trans.set_region(region);
     rd_trans.set_qos(qos);
-    agent.rd_driver.send(rd_trans);   
+    agent.mst_rd_driver.send(rd_trans);   
   endtask  : single_read_transaction_api
 
 
@@ -383,9 +401,9 @@ module axi_vip_0_mst_stimulus();
                                input xil_axi_uint    num_xfer =1);
     axi_transaction                                    wr_tran;
     for (int i =0; i< num_xfer; i++) begin
-      wr_tran = agent.wr_driver.create_transaction($sformatf("%s,  %0d of %0d",name,i,num_xfer));
+      wr_tran = agent.mst_wr_driver.create_transaction($sformatf("%s,  %0d of %0d",name,i,num_xfer));
       fill_transaction_with_fully_randomization(wr_tran);
-      agent.wr_driver.send(wr_tran);
+      agent.mst_wr_driver.send(wr_tran);
     end  
   endtask
  
@@ -404,11 +422,11 @@ module axi_vip_0_mst_stimulus();
                                input string          name ="multiple_read_transaction_full_rand",
                                input xil_axi_uint    num_xfer =1);
     axi_transaction                                    rd_tran;
-    rd_tran = agent.rd_driver.create_transaction(name);
+    rd_tran = agent.mst_rd_driver.create_transaction(name);
     for (int i =0; i< num_xfer; i++) begin
-      rd_tran = agent.rd_driver.create_transaction($sformatf("%s,  %0d of %0d",name,i,num_xfer));
+      rd_tran = agent.mst_rd_driver.create_transaction($sformatf("%s,  %0d of %0d",name,i,num_xfer));
       fill_transaction_with_fully_randomization(rd_tran);
-      agent.rd_driver.send(rd_tran);
+      agent.mst_rd_driver.send(rd_tran);
     end  
   endtask
 
@@ -441,7 +459,7 @@ module axi_vip_0_mst_stimulus();
 
     // queue up transactions
     for (int i =0; i <num_xfer; i++) begin
-      rd_tran[i] = agent.rd_driver.create_transaction($sformatf("read_multiple_transaction id =%0d",i));
+      rd_tran[i] = agent.mst_rd_driver.create_transaction($sformatf("read_multiple_transaction id =%0d",i));
       if(no_xfer_delays ==1) begin
         rd_tran[i].set_data_insertion_delay_range(0,0);
         rd_tran[i].set_addr_delay_range(0,0);
@@ -457,11 +475,12 @@ module axi_vip_0_mst_stimulus();
     end
     //send out transaction
     for (int i =0; i <num_xfer; i++) begin
-       agent.rd_driver.send(rd_tran[i]);
+       agent.mst_rd_driver.send(rd_tran[i]);
     end
   endtask :multiple_read_transaction_partial_rand
 
-  /*************************************************************************************************  * This task is to queue up multiple transactions with the same id, length,size, burst type
+  /*************************************************************************************************
+  * This task is to queue up multiple transactions with the same id, length,size, burst type
   * and incrementd addr with different data. then it send out all these transactions 
   * 1. Declare a handle for write transaction
   * 2. set delay range if user set there transction is of no delay
@@ -488,7 +507,7 @@ module axi_vip_0_mst_stimulus();
 
     // queue up transactions
     for (int i =0; i <num_xfer; i++) begin
-      wr_tran[i] = agent.wr_driver.create_transaction($sformatf("write_multiple_transaction id =%0d",i));
+      wr_tran[i] = agent.mst_wr_driver.create_transaction($sformatf("write_multiple_transaction id =%0d",i));
       if(no_xfer_delays ==1) begin
         wr_tran[i].set_data_insertion_delay_range(0,0);
         wr_tran[i].set_addr_delay_range(0,0);
@@ -504,7 +523,7 @@ module axi_vip_0_mst_stimulus();
     end
     //send out transaction
     for (int i =0; i <num_xfer; i++) begin
-       agent.wr_driver.send(wr_tran[i]);
+       agent.mst_wr_driver.send(wr_tran[i]);
     end
   endtask :multiple_write_transaction_partial_rand
 
@@ -517,7 +536,7 @@ module axi_vip_0_mst_stimulus();
   * 5. send the transaction to Master VIP interface and wait till response come back
   * 6. Get read data beat and data block from the driver
   * 7. user can do a check between write data and read data(if in the enviroment there is memory in the system)
-  *    or print out the data information 
+  *   or print out the data information 
   * 8. increment the address and repeat another write in and read back till num_xfer transactions
   *************************************************************************************************/
 
@@ -541,7 +560,7 @@ module axi_vip_0_mst_stimulus();
     addr = start_addr;
     for (int i =0; i <num_xfer; i++) begin
       //write transaction in 
-      wr_trans = agent.wr_driver.create_transaction($sformatf("fill in write transaction with inline randomization id =%0d",i));
+      wr_trans = agent.mst_wr_driver.create_transaction($sformatf("fill in write transaction with inline randomization id =%0d",i));
        if(no_xfer_delays ==1) begin
         wr_trans.set_data_insertion_delay_range(0,0);
         wr_trans.set_addr_delay_range(0,0);
@@ -558,7 +577,7 @@ module axi_vip_0_mst_stimulus();
       //$display("Write data from Driver: Block Data %h ", data_block_for_write);
       
       // read data back
-      rd_trans = agent.rd_driver.create_transaction($sformatf("fill in read transaction with inline randomization id =%0d",i));
+      rd_trans = agent.mst_rd_driver.create_transaction($sformatf("fill in read transaction with inline randomization id =%0d",i));
       if(no_xfer_delays ==1) begin
         rd_trans.set_data_insertion_delay_range(0,0);
         rd_trans.set_addr_delay_range(0,0);
@@ -577,22 +596,6 @@ module axi_vip_0_mst_stimulus();
     end
   endtask
 
-  /**********************************************************************************************
-  * Note: if multiple agents are called in one testbench,it will be hard to tell which
-  * agent is complaining. set_agent_tag can be used to set a name tag for each agent
-    agent.set_agent_tag("My Master VIP one");
-
-  * If user wants to know all the details of each transaction, set_verbosity can be used to set
-  * up information being printed out or not. Default is no print out 
-    * Verbosity level which specifies how much debug information to produce
-    *    0       - No information will be printed out.
-    *   400      - All information will be printed out
-    agent.set_verbosity(0);
-
-  * These two lines should be added anywhere after agent is being newed  
-  *************************************************************************************************/
-
-  
   /*************************************************************************************************
   * RREADY Generation with customized pattern
   * Master read driver create rready
@@ -603,11 +606,11 @@ module axi_vip_0_mst_stimulus();
 
   task user_gen_rready();  
     axi_ready_gen                           rready_gen;
-    rready_gen = agent.rd_driver.create_ready("rready");
+    rready_gen = agent.mst_rd_driver.create_ready("rready");
     rready_gen.set_ready_policy(XIL_AXI_READY_GEN_AFTER_VALID_OSC);
     rready_gen.set_low_time(2);
     rready_gen.set_high_time(1);
-    agent.rd_driver.send_rready(rready_gen);
+    agent.mst_rd_driver.send_rready(rready_gen);
   endtask
   *************************************************************************************************/
 
@@ -615,7 +618,7 @@ module axi_vip_0_mst_stimulus();
   /*************************************************************************************************
   * There are two ways to get read data. One is to get it through the read driver of master agent. 
   * The other is to get it through the monitor of VIP.(Please refer
-  * monitor_rd_data_method_one, monitor_rd_data_method_two in *exdes_generic.sv file.)
+  * monitor_rd_data_method_one, monitor_rd_data_method_two in *axisim_generic.sv file.)
   *
   * To get data from read driver, follow the steps listed below. 
   * step 1: Use the read driver in master agent to create a read transaction handle.
@@ -669,11 +672,11 @@ module axi_vip_0_mst_stimulus();
   task driver_rd_data_method_one();
     axi_transaction                         rd_trans;
     xil_axi_data_beat                       mtestDataBeat[];
-    rd_trans = agent.rd_driver.create_transaction("read transaction with randomization");
+    rd_trans = agent.mst_rd_driver.create_transaction("read transaction with randomization");
     RD_TRANSACTION_FAIL_1a:assert(rd_trans.randomize());
     rd_trans.set_driver_return_item_policy(XIL_AXI_PAYLOAD_RETURN);
-    agent.rd_driver.send(rd_trans);
-    agent.rd_driver.wait_rsp(rd_trans);
+    agent.mst_rd_driver.send(rd_trans);
+    agent.mst_rd_driver.wait_rsp(rd_trans);
     mtestDataBeat = new[rd_trans.get_len()+1];
     for( xil_axi_uint beat=0; beat<rd_trans.get_len()+1; beat++) begin
       mtestDataBeat[beat] = rd_trans.get_data_beat(beat);
@@ -685,14 +688,101 @@ module axi_vip_0_mst_stimulus();
   task driver_rd_data_method_two();  
     axi_transaction                         rd_trans;
     bit[8*4096-1:0]                         data_block;
-    rd_trans = agent.rd_driver.create_transaction("read transaction with randomization");
+    rd_trans = agent.mst_rd_driver.create_transaction("read transaction with randomization");
     RD_TRANSACTION_FAIL_1a:assert(rd_trans.randomize());
     rd_trans.set_driver_return_item_policy(XIL_AXI_PAYLOAD_RETURN);
-    agent.rd_driver.send(rd_trans);
-    agent.rd_driver.wait_rsp(rd_trans);
+    agent.mst_rd_driver.send(rd_trans);
+    agent.mst_rd_driver.wait_rsp(rd_trans);
     data_block = rd_trans.get_data_block();
    // $display("Read data from Driver: Block Data %h ", data_block);
   endtask 
 
 
+  
+  /************************************************************************************************* 
+  * Write transaction method 3: similar methods of AXI BFM WRITE_BURST 
+  * special care needs to be done here.
+  *according to protocl type, use different tasks
+  *AXI4: rd_tran_method_three(id, addr, len,size,burst,lock,cache,prot,region,qos,awuser,data,wuser,bresp)   
+  *AXI3: rd_tran_method_three(id, addr, len,size,burst,lock,cache,prot,data,bresp)
+  *AXI4-LITE: rd_tran_method_three(addr,prot,data,resp)
+  *AXI4:AXI4_WRITE_BURST (id, addr, len,size,burst,lock,cache,prot,region,qos,awuser,data,wuser,resp)
+  *AXI3:AXI3_WRITE_BURST (id, addr, len,size,burst,lock,cache,prot,data,resp)
+  *AXI4LITE: AXI4LITE_WRITE_BURST (addr,prot,data,resp)
+  *generate inputs as needed for WRITE_BURST(similiar to AXI BFM WRITE_BURST)
+  *************************************************************************************************/
+     task wr_tran_method_three(   
+                                input xil_axi_ulong              addr =0,
+                                input xil_axi_prot_t             prot =0,
+                                input bit [32767:0]              data =0,
+                                input xil_axi_resp_t             bresp=XIL_AXI_RESP_OKAY
+);
+    agent.AXI4LITE_WRITE_BURST(
+        addr,
+        prot,
+        data,
+        bresp
+      );  
+   
+    $display("Sequential write transfers example similar to  AXI BFM WRITE_BURST method completes");
+  endtask : wr_tran_method_three
+
+  
+  /*************************************************************************************************  
+  * Read transaction method 3: similar methods of AXI BFM READ_BURST 
+  * special care needs to be done here.
+  *according to protocl type, use different tasks 
+  *AXI4: rd_tran_method_three(id, addr, len,size,burst,lock,cache,prot,region,qos,aruser,data,rresp,ruser)   
+  *AXI3: rd_tran_method_three(id, addr, len,size,burst,lock,cache,prot,data,rresp)
+  *AXI4-LITE: rd_tran_method_three(addr,prot,data,resp)
+  * since it calls 
+  *AXI4:AXI4_READ_BURST (id, addr, len,size,burst,lock,cache,prot,region,qos,aruser,data,rresp,ruser)
+  *AXI3:AXI3_READ_BURST (id, addr, len,size,burst,lock,cache,prot,data,resp)
+  *AXI4-LITE: AXI4LITE_READ_BURST (addr,prot,data,resp)
+  *generate inputs as needed for READ_BURST(similiar to AXI BFM READ_BURST)
+  *************************************************************************************************/
+  task rd_tran_method_three(    input xil_axi_uint               id =0, 
+                                input xil_axi_ulong              addr =0,
+                                input xil_axi_len_t              len =0, 
+                                input xil_axi_size_t             size =xil_axi_size_t'(xil_clog2((32)/8)),
+                                input xil_axi_burst_t            burst =XIL_AXI_BURST_TYPE_INCR,
+                                input xil_axi_lock_t             lock =XIL_AXI_ALOCK_NOLOCK,
+                                input xil_axi_cache_t            cache =0,
+                                input xil_axi_prot_t             prot =0,
+                                input xil_axi_region_t           region =0,
+                                input xil_axi_qos_t              qos =0,
+                                input xil_axi_data_beat          aruser =0 ,
+                                output bit [32767:0]             data ,
+                                output xil_axi_resp_t[255:0]      rresp ,
+                                output xil_axi_data_beat [255:0]  ruser 
+);
+    agent.AXI4LITE_READ_BURST(
+          addr,
+          prot,
+          data,
+          rresp
+        );
+   
+    $display("Sequential read transfers example similar to  AXI BFM READ_BURST method completes");
+  endtask
+
+
+ 
+  /**********************************************************************************************
+  * Note: if multiple agents are called in one testbench,it will be hard to tell which
+  * agent is complaining. set_agent_tag can be used to set a name tag for each agent
+    agent.set_agent_tag("My Passthrough VIP one");
+
+  * If user wants to know all the details of each transaction, set_verbosity can be used to set
+  * up information being printed out or not. Default is no print out 
+    * Verbosity level which specifies how much debug information to produce
+    *    0       - No information will be printed out.
+    *   400      - All information will be printed out
+    agent.set_verbosity(0);
+
+  * These two lines should be added anywhere after agent is being newed  
+  *************************************************************************************************/
+
+  
+ 
 endmodule 

@@ -5,20 +5,20 @@
 // The example design consists of one AXI VIP in master mode, one AXI VIP in passthrough mode 
 // and one AXI VIP in slave mode.
 // It includes master agent stimulus, slave memory agent stimulus and generic testbench file. 
-// Please refer axi_vip_0_mst_stimulus.sv for usage of Master VIP generating stimulus
-// Please refer axi_vip_0_passthrough_slv_stimulus.sv for usage of Passthrough VIP in run time
+// Please refer mst_stimulus.sv for usage of Master VIP generating stimulus
+// Please refer passthrough_slv_stimulus.sv for usage of Passthrough VIP in run time
 // slave mode(withoug memory model) responding
-// Please refer axi_vip_0_exdes_generic.sv for simple scoreboarding,how to get monitor 
+// Please refer axisim_generic.sv for simple scoreboarding,how to get monitor 
 // transaction from Master VIP monitor and Passthrough VIP monitor 
 //-------------------------------------------------------------------------------------------------------------
 
 `timescale 1ns / 1ps
 
-`include "axi_vip_0_exdes_generic.sv"
-`include "axi_vip_0_mst_stimulus.sv"
-`include "axi_vip_0_passthrough_slv_basic_stimulus.sv"
+`include "axisim_generic.sv"
+`include "mst_stimulus.sv"
+`include "passthrough_slv_basic_stimulus.sv"
 
-module axi_vip_0_exdes_basic_mst_active__pt_slv__slv_passive(
+module axisim_basic_mst_active__pt_slv__slv_passive(
   );
      
   // Clock signal
@@ -29,13 +29,13 @@ module axi_vip_0_exdes_basic_mst_active__pt_slv__slv_passive(
   // event to stop simulation
   event                                   done_event;
 
-  axi_vip_0_exdes_generic  generic_tb();
-  axi_vip_0_mst_stimulus mst();
-  axi_vip_0_passthrough_slv_basic_stimulus slv();
+  axisim_generic  generic_tb();
+  mst_stimulus mst();
+  passthrough_slv_basic_stimulus slv();
 
 
   // instantiate bd
-  ex_sim DUT(
+  axi_sim DUT(
       .aresetn(reset),
   
     .aclk(clock)

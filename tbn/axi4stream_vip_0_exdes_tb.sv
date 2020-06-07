@@ -50,7 +50,7 @@ import axi4stream_vip_pkg::*;
 import axi4stream_vip_mst_0_pkg::*;
 import axi4stream_vip_slv_0_pkg::*;
 
-module axi4stream_vip_0_exdes_tb();
+module axi4stream_vip_0_axisim_tb();
 
   // Error count to check how many comparison failed
   xil_axi4stream_uint                            error_cnt = 0; 
@@ -115,7 +115,7 @@ module axi4stream_vip_0_exdes_tb();
     * The hierarchy path of the AXI4STREAM VIP's interface is passed to the agent when it is newed. 
     * Method to find the hierarchy path of AXI4STREAM VIP is to run simulation without agents being newed,
     * message like "Xilinx AXI4STREAM VIP Found at Path: 
-    * my_ip_exdes_tb.axi4stream_vip_mst.inst" will be printed out.
+    * my_ip_axisim_tb.axi4stream_vip_mst.inst" will be printed out.
     ***************************************************************************************************/
 
     mst_agent = new("master vip agent", axi4stream_vip_mst.inst.IF);

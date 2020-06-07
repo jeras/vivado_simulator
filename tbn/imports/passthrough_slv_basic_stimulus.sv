@@ -1,5 +1,5 @@
 /***************************************************************************************************
-* Description: 
+* Description:
 * Considering different user cases, Passthrough VIP can be switched into either run time master
 * mode or run time slave mode. When it is in run time slave mode, depends on situations, user may
 * want to build their own memory model or using existing memory model. Passthrough VIP has two
@@ -17,16 +17,15 @@
 *    3. new agent (passing instance IF correctly)
 *    4. switch passthrough mode into run time slave mode
 *    5. start_slave
-*    6. wr/rd_response/ready_gen
-* As for ready generation, if user enviroment doesn't do anything, it will randomly generate ready
-* siganl, if user wants to create his own ready signal, please refer task user_gen_wready 
+*    6. wr/rd_response 
 ***************************************************************************************************/
 
 import axi_vip_pkg::*;
 import axi_vip_thr_pkg::*;
 
-module axi_vip_0_passthrough_slv_stimulus(
+module passthrough_slv_basic_stimulus(
   );
+ 
   /*************************************************************************************************
   * Description: byte based memory model 
   * Data_mem is associated array for memory model. It's size can be infinitely theorically.
@@ -43,35 +42,29 @@ module axi_vip_0_passthrough_slv_stimulus(
   * Then click CONFIG under Properties window and Component_Name will be shown
   * More details please refer PG267 for more details
   *************************************************************************************************/
-
   axi_vip_thr_passthrough_t              agent;
 
   initial begin
     /***********************************************************************************************    * Before agent is newed, user has to run simulation with an empty testbench to find the
     * hierarchy path of the AXI VIP's instance.Message like
-    * "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.axi_vip_mst.inst" will be printed 
+    * "Xilinx AXI VIP Found at Path: my_ip_axisim_tb.DUT.axi_vip_mst.inst" will be printed 
     * out. Pass this path to the new function. 
     ***********************************************************************************************/
     agent = new("passthrough vip agent",DUT.axi_vip_thr.inst.IF);
 
-    /***********************************************************************************************    * Set tag for agents for easy debug especially multiple agents are called in one testbench
+    /***********************************************************************************************
+    *  User has call API from Passthrough VIP's top to switch passthrough VIP into run time slave 
+    *  mode. The hierarchy path is the same as shown in new 
     ***********************************************************************************************/
-    agent.set_agent_tag("My Passthrough VIP");
+    DUT.axi_vip_thr.inst.set_slave_mode();  
 
-    /***********************************************************************************************    * Set verbosity of agent - default is no print out 
-    * Verbosity level which specifies how much debug information to produce
-    *    0       - No information will be printed out.
-    *   400      - All information will be printed out
+    /***********************************************************************************************
+    *  User has call API from Passthrough VIP's agent to start slave
     ***********************************************************************************************/
-    agent.set_verbosity(0);
-
-    DUT.axi_vip_thr.inst.set_slave_mode();  //Switch passthrough VIP into 
-                                                              // run time slave mode
-    agent.start_slave();                                     //agent starts to run
+    agent.start_slave();
 
     //Fork off arready generation and write/read response
     fork
-      user_gen_arready();
       wr_response();
       rd_response();
     join_none
@@ -79,66 +72,17 @@ module axi_vip_0_passthrough_slv_stimulus(
   end
 
   /*************************************************************************************************
-  * Task user_gen_wready shows how slave VIP agent generates one customerized arready signal. 
-  * declare axi_ready_gen  arready_gen
-  * call create_ready from agent's write driver to create a new class of axi_ready_gen 
-  * set the poicy of ready generation in this example, it select XIL_AXI_READY_GEN_OSC 
-  * set low time 
-  * set high time
-  * agent's write driver send_arready out
-  * ready generation policy are listed below:
-  *  XIL_AXI_READY_GEN_NO_BACKPRESSURE     - Ready stays asserted and will not change. The driver
-                                             will still check for policy changes.
-  *   XIL_AXI_READY_GEN_SINGLE             - Ready stays 0 for low_time clock cycles and then
-                                             dirves 1 until one ready/valid handshake occurs,
-                                             the policy repeats until the channel is given
-                                             different policy.
-  *   XIL_AXI_READY_GEN_EVENTS             - Ready stays 0 for low_time clock cycles and then
-                                             dirves 1 until event_count ready/valid handshakes
-                                             occur,the policy repeats until the channel is given
-                                             different policy.
-  *   XIL_AXI_READY_GEN_OSC                - Ready stays 0 for low_time and then goes to 1 and      
-                                             stays 1 for high_time,the policy repeats until the
-                                             channel is given different policy.
-  *   XIL_AXI_READY_GEN_RANDOM             - This policy generate random ready policy and uses
-                                             min/max pair of low_time, high_time and event_count to
-                                             generate low_time, high_time and event_count.
-  *   XIL_AXI_READY_GEN_AFTER_VALID_SINGLE - This policy is active when VALID is detected to be
-                                             asserted, Ready stays 0 for low_time clock cycles and
-                                             then dirves 1 until one ready/valid handshake occurs,
-                                             the policy repeats until the channel is given
-                                             different policy.
-  *   XIL_AXI_READY_GEN_AFTER_VALID_EVENTS - This policy is active when VALID is detected to be
-                                             asserted, Ready stays 0 for low_time clock cycles and
-                                             then dirves 1 until event_count ready/valid handshake
-                                             occurs,the policy repeats until the channel is given
-                                             different policy.
-  *   XIL_AXI_READY_GEN_AFTER_VALID_OSC    - This policy is active when VALID is detected to be
-                                             asserted, Ready stays 0 for low_time and then goes to
-                                             1 and  stays 1 for high_time,the policy repeats until
-                                             the channel is given different policy.
-  *************************************************************************************************/
-  task user_gen_arready();
-    axi_ready_gen                           arready_gen;
-    arready_gen = agent.slv_rd_driver.create_ready("arready");
-    arready_gen.set_ready_policy(XIL_AXI_READY_GEN_OSC);
-    arready_gen.set_low_time(1);
-    arready_gen.set_high_time(2);
-    agent.slv_rd_driver.send_arready(arready_gen);
-  endtask
-  
-  /*************************************************************************************************
   * wr_response: Task which slave write driver in slave agent waits till it sees a write transaction
   * and then user enviroment fill in write response, write driver send it over to VIP interface
   * When slave VIP is configured in READ_WRITE/WRITE_ONLY mode,user environment must call this task
   * Otherwise, the simulation will hang there waiting for BRESP from slave till time out.
   *************************************************************************************************/
   task wr_response();
-    axi_transaction                         wr_reactive;
-    forever begin  :slv_run
-      agent.slv_wr_driver.get_wr_reactive(wr_reactive);
-      fill_wr_reactive(wr_reactive);
-      agent.slv_wr_driver.send(wr_reactive);
+    axi_transaction                    wr_reactive;       //Declare a handle for write response
+    forever begin  
+      agent.slv_wr_driver.get_wr_reactive(wr_reactive);  //Block till write transaction occurs
+      fill_wr_reactive(wr_reactive);                     //User fill in write response
+      agent.slv_wr_driver.send(wr_reactive);            //slave Write driver send response
     end
   endtask
 
@@ -149,15 +93,15 @@ module axi_vip_0_passthrough_slv_stimulus(
   * Otherwise, the simulation will hang there waiting for data channel from slave till time out.
   *************************************************************************************************/
   task rd_response();
-    axi_transaction                         rd_reactive;
+    axi_transaction                   rd_reactive;      //Declare a handle for read response
     forever begin
-      agent.slv_rd_driver.get_rd_reactive(rd_reactive);
-      fill_rd_reactive(rd_reactive);
-      agent.slv_rd_driver.send(rd_reactive);
+      agent.slv_rd_driver.get_rd_reactive(rd_reactive); //Block till read transaction occurs
+      fill_rd_reactive(rd_reactive);                    //User fill in read response
+      agent.slv_rd_driver.send(rd_reactive);            //Slave write driver send response
     end  
   endtask
 
-  /*************************************************************************************************
+ /*************************************************************************************************
   * Fill_rd_reactive: Task fills in data and user(when RUSR_WIDH>0) info for read data channel
   * Fill data into transaction according to related address of the transaction and 
   * existence in memory
@@ -230,7 +174,6 @@ module axi_vip_0_passthrough_slv_stimulus(
     t.clr_beat_index();
   endfunction: fill_rd_reactive
 
-
   /*************************************************************************************************
   * Fill_wr_reactive: Task fills in BREPS,BUSER(when BUSER_WIDTH>0) and bresp_delay for write
   * response channel.
@@ -241,5 +184,4 @@ module axi_vip_0_passthrough_slv_stimulus(
     t.set_bresp(XIL_AXI_RESP_OKAY);
   endfunction: fill_wr_reactive
 
- 
 endmodule

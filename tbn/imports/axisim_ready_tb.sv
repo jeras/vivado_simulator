@@ -23,16 +23,16 @@ import axi_vip_mst_pkg::*;
 import axi_vip_slv_pkg::*;
 import axi_vip_thr_pkg::*;
 
-module axi_vip_0_exdes_ready_tb(
+module axisim_ready_tb(
   );
 
   typedef enum {
     EXDES_PASSTHROUGH,
     EXDES_PASSTHROUGH_MASTER,
     EXDES_PASSTHROUGH_SLAVE
-  } exdes_passthrough_t;
+  } axisim_passthrough_t;
 
-  exdes_passthrough_t                     exdes_state = EXDES_PASSTHROUGH;
+  axisim_passthrough_t                     axisim_state = EXDES_PASSTHROUGH;
 
   //Simple loop integer
   integer                                 i; 
@@ -111,7 +111,7 @@ module axi_vip_0_exdes_ready_tb(
   bit                                     reset;
 
   // instantiate bd
-    ex_sim DUT(
+    axi_sim DUT(
       .aresetn(reset),
       .aclk(clock)
     );
@@ -131,7 +131,7 @@ module axi_vip_0_exdes_ready_tb(
     /*************************************************************************************************  
     * The hierarchy path of the AXI VIP's interface is passed to the agent when it is newed. 
     * Method to find the hierarchy path of AXI VIP is to run simulation without agents being newed, 
-    * message like "Xilinx AXI VIP Found at Path: my_ip_exdes_ready_tb.DUT.axi_vip_mst.inst" will 
+    * message like "Xilinx AXI VIP Found at Path: my_ip_axisim_ready_tb.DUT.axi_vip_mst.inst" will 
     * be printed out.
     ***********************************************************************************************/
     mst_agent = new("master vip agent",DUT.axi_vip_mst.inst.IF);
@@ -371,8 +371,8 @@ module axi_vip_0_exdes_ready_tb(
     *  2.4 generate an no backpressure rready signal  
     *  2.5 generate an no backpressure bready signal  
     ***********************************************************************************************/
-    axi_vip_0_exdes_ready_tb.DUT.axi_vip_thr.inst.set_master_mode();
-    exdes_state = EXDES_PASSTHROUGH_MASTER;
+    axisim_ready_tb.DUT.axi_vip_thr.inst.set_master_mode();
+    axisim_state = EXDES_PASSTHROUGH_MASTER;
     passthrough_mem_agent.set_agent_tag("Passthrough VIP in Master mode");
     passthrough_mem_agent.start_master();
 
@@ -606,11 +606,11 @@ module axi_vip_0_exdes_ready_tb(
   initial begin
     forever begin
       passthrough_mem_agent.monitor.item_collected_port.get(passthrough_monitor_transaction);
-      if (exdes_state != EXDES_PASSTHROUGH_SLAVE) begin
+      if (axisim_state != EXDES_PASSTHROUGH_SLAVE) begin
         passthrough_master_moniter_transaction_queue.push_back(passthrough_monitor_transaction);
         passthrough_master_moniter_transaction_queue_size++;
       end
-      if (exdes_state != EXDES_PASSTHROUGH_MASTER) begin
+      if (axisim_state != EXDES_PASSTHROUGH_MASTER) begin
         passthrough_slave_moniter_transaction_queue.push_back(passthrough_monitor_transaction);
         passthrough_slave_moniter_transaction_queue_size++;
       end

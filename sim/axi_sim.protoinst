@@ -1,7 +1,7 @@
 {
 	"version": "1.0",
 	"modules": {
-		"ex_sim": {
+		"axi_sim": {
 			"proto_instances": {
 				"axi_mst/": {
 					"interface": "xilinx.com:interface:aximm:1.0",

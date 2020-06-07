@@ -29,16 +29,16 @@ import axi_vip_mst_pkg::*;
 import axi_vip_slv_pkg::*;
 import axi_vip_thr_pkg::*;
 
-module axi_vip_0_exdes_tb(
+module axisim_tb(
   );
 
   typedef enum {
     EXDES_PASSTHROUGH,
     EXDES_PASSTHROUGH_MASTER,
     EXDES_PASSTHROUGH_SLAVE
-  } exdes_passthrough_t;
+  } axisim_passthrough_t;
 
-  exdes_passthrough_t                     exdes_state = EXDES_PASSTHROUGH;
+  axisim_passthrough_t                     axisim_state = EXDES_PASSTHROUGH;
 
   /***********************************************************************************************
   * verbosity level which specifies how much debug information to produce
@@ -97,7 +97,7 @@ module axi_vip_0_exdes_tb(
   bit                                     reset;
 
   // instantiate bd
-    ex_sim DUT(
+    axi_sim DUT(
       .aresetn(reset),
       .aclk(clock)
     );
@@ -114,7 +114,7 @@ module axi_vip_0_exdes_tb(
     /***********************************************************************************************
     * The hierarchy path of the AXI VIP's interface is passed to the agent when it is newed. 
     * Method to find the hierarchy path of AXI VIP is to run simulation without agents being newed, 
-    * message like "Xilinx AXI VIP Found at Path: my_ip_exdes_tb.DUT.axi_vip_mst.inst" will 
+    * message like "Xilinx AXI VIP Found at Path: my_ip_axisim_tb.DUT.axi_vip_mst.inst" will 
     * be printed out.
     ***********************************************************************************************/
 
@@ -143,7 +143,7 @@ module axi_vip_0_exdes_tb(
 
     mst_agent.start_master();
     slv_mem_agent.start_slave();
-    exdes_state = EXDES_PASSTHROUGH;
+    axisim_state = EXDES_PASSTHROUGH;
     passthrough_agent.start_monitor();
     
     error_cnt = 0;
