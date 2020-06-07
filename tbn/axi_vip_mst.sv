@@ -81,7 +81,7 @@ module axi_vip_mst #(
   axi_if.m m_axi
 );
 
-axi_vip_v1_1_6_top #(
+axi_vip_v1_1_7_top #(
   .C_AXI_PROTOCOL        (PROTOCOL       ),
   .C_AXI_INTERFACE_MODE  (0),
   .C_AXI_ADDR_WIDTH      (ADDR_WIDTH     ),
